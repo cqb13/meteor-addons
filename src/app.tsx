@@ -1,6 +1,7 @@
 import { useState, useEffect } from "preact/hooks";
 import { loadAddons } from "./helpers/addonLoader";
 import type { Addon } from "./helpers/addon";
+import { StarCount } from "./components/StarCount";
 
 export function App() {
   const [addons, setAddons] = useState<Addon[]>([]);
@@ -54,17 +55,19 @@ export function App() {
         <section class="flex gap-2 flex-wrap justify-center items-center">
           {visibleAddons?.map((addon: Addon, key: number) => (
             <div key={key} class="w-96 h-52 block border rounded p-2">
-              <div class="flex gap-1">
+              <div class="flex gap-1 items-center">
                 {addon.icon ? (
                   <img src={addon.icon} alt="icon" class="w-16 h-16 rounded" />
                 ) : null}
-                <div>
+                <div class="flex flex-col justify-center">
                   <p>{addon.name}</p>
                   <p>{addon.repo.owner}</p>
                 </div>
               </div>
               <p>{addon.summary}</p>
-              <div></div>
+              <div>
+                <StarCount starCount={addon.stars} />
+              </div>
             </div>
           ))}
         </section>
