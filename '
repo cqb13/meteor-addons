@@ -1,22 +1,12 @@
 import { useState, useEffect } from "preact/hooks";
 import { loadAddons } from "./helpers/addonLoader";
-import type { Addon } from "./helpers/addon";
 
 export function App() {
-  const [addons, setAddons] = useState<Addon[]>([]);
-
   useEffect(() => {
     (async () => {
       const addons = await loadAddons();
-      setAddons(addons);
     })();
   }, []);
 
-  return (
-    <>
-      <header></header>
-      <main></main>
-      <footer></footer>
-    </>
-  );
+  return <></>;
 }
