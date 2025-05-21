@@ -1,4 +1,6 @@
-export interface Addon {
+//TODO: add fork
+
+export default interface Addon {
   authors: string[];
   features: string[];
   featureCount: number;

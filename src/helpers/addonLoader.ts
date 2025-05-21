@@ -1,6 +1,6 @@
-import type { Addon } from "./addon";
+import type Addon from "./addon";
 
-export async function loadAddons(): Promise<Addon[]> {
+export default async function loadAddons(): Promise<Addon[]> {
   const res = await fetch(
     `https://raw.githubusercontent.com/cqb13/anticope.ml/data/addons-all.json?v=${new Date().getTime()}`,
   );
