@@ -9,6 +9,7 @@ export default interface Addon {
     owner: string;
     name: string;
     archived: boolean;
+    fork: boolean;
   };
   links: {
     github: string;

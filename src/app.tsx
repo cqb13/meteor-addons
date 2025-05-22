@@ -9,7 +9,6 @@ enum SortMode {
   Downloads,
 }
 
-//TODO: get current meteor version from their website and current meteor dev build version from website, add options to filter to only those
 export function App() {
   const [addons, setAddons] = useState<Addon[]>([]);
   const [visibleAddons, setVisibleAddons] = useState<Addon[]>([]);
@@ -45,7 +44,14 @@ export function App() {
 
   useEffect(() => {
     updateVisibleAddons();
-  }, [addons, verifiedOnly, searchValue, onlyCurrentMeteorVersion]);
+  }, [
+    addons,
+    verifiedOnly,
+    searchValue,
+    includeForks,
+    includeArchived,
+    onlyCurrentMeteorVersion,
+  ]);
 
   function updateVisibleAddons() {
     let visible: Addon[] = [];
@@ -53,6 +59,8 @@ export function App() {
     addons.forEach((addon: Addon) => {
       if (
         ((verifiedOnly && addon.verified) || !verifiedOnly) &&
+        ((!includeForks && !addon.repo.fork) || includeForks) &&
+        ((!includeArchived && !addon.repo.archived) || includeArchived) &&
         ((onlyCurrentMeteorVersion &&
           addon.mcVersion == currentMeteorVersion) ||
           !onlyCurrentMeteorVersion) &&
@@ -109,6 +117,18 @@ export function App() {
           />
         </section>
         <section class="flex gap-2 w-11/12">
+          <button
+            onClick={() => setIncludeForks(!includeForks)}
+            class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${includeForks ? "border-purple-300/80" : null}`}
+          >
+            Include Forks
+          </button>
+          <button
+            onClick={() => setIncludeArchived(!includeArchived)}
+            class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${includeArchived ? "border-purple-300/80" : null}`}
+          >
+            Include Archived
+          </button>
           {currentMeteorVersion && (
             <button
               onClick={() =>

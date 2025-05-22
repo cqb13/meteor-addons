@@ -24,6 +24,7 @@ export default async function loadAddons(): Promise<Addon[]> {
         owner: owner,
         name: name,
         archived: a.status.archived,
+        fork: a.status.fork,
       },
       links: {
         github: a.links.github,
