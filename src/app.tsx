@@ -15,6 +15,7 @@ export function App() {
   const [totalAddons, setTotalAddons] = useState<number>(0);
 
   // filters
+  const [searchValue, setSearchValue] = useState<string>("");
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
 
   // Sorting
@@ -31,17 +32,28 @@ export function App() {
 
   useEffect(() => {
     updateVisibleAddons();
-  }, [addons, verifiedOnly]);
+  }, [addons, verifiedOnly, searchValue]);
 
   function updateVisibleAddons() {
     let visible: Addon[] = [];
 
     addons.forEach((addon: Addon) => {
-      if ((verifiedOnly && addon.verified) || !verifiedOnly) {
+      if (
+        ((verifiedOnly && addon.verified) || !verifiedOnly) &&
+        (addon.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          addon.authors.some((author) =>
+            author.toLowerCase().includes(searchValue.toLowerCase()),
+          ) ||
+          addon.repo.owner.toLowerCase().includes(searchValue.toLowerCase()))
+      ) {
         visible.push(addon);
       }
     });
     setVisibleAddons(visible);
+  }
+
+  function searchAddons(event: any) {
+    setSearchValue(event.target.value);
   }
 
   function sortAddonsByStars() {
@@ -71,6 +83,15 @@ export function App() {
     <>
       <header></header>
       <main class="flex flex-col gap-2 justify-center items-center p-5">
+        <section class="w-11/12">
+          <input
+            type="text"
+            placeholder="search here..."
+            onInput={searchAddons}
+            value={searchValue}
+            class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
+          />
+        </section>
         <section class="flex justify-between w-11/12">
           <div class="flex gap-2 w-1/2">
             <button
