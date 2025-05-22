@@ -3,6 +3,11 @@ import loadAddons from "./helpers/addonLoader";
 import type Addon from "./helpers/addon";
 import AddonCard from "./components/AddonCard";
 
+enum SortMode {
+  Stars,
+  Downloads,
+}
+
 //TODO: get current meteor version from their website and current meteor dev build version from website, add options to filter to only those
 export function App() {
   const [addons, setAddons] = useState<Addon[]>([]);
@@ -12,9 +17,14 @@ export function App() {
   // filters
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
 
+  // Sorting
+  const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
+  const [reversedList, setReversedList] = useState<boolean>(false);
+
   useEffect(() => {
     (async () => {
-      const addons = await loadAddons();
+      let addons = await loadAddons();
+      addons.sort((a: Addon, b: Addon) => b.stars - a.stars);
       setTotalAddons(addons.length);
       setAddons(addons);
     })();
@@ -35,10 +45,64 @@ export function App() {
     setVisibleAddons(visible);
   }
 
+  function sortAddonsByStars() {
+    if (sortMode == SortMode.Stars) return;
+    setSortMode(SortMode.Stars);
+    const sortedAddons = [...addons].sort(
+      (a: Addon, b: Addon) => b.stars - a.stars,
+    );
+    setAddons(sortedAddons);
+  }
+
+  function sortAddonsByDownloads() {
+    if (sortMode == SortMode.Downloads) return;
+    setSortMode(SortMode.Downloads);
+    const sortedAddons = [...addons].sort(
+      (a: Addon, b: Addon) => b.downloads - a.downloads,
+    );
+    setAddons(sortedAddons);
+  }
+
+  function reverseAddonList() {
+    const reversedAddons = [...addons].reverse();
+    setAddons(reversedAddons);
+  }
+
   return (
     <>
       <header></header>
       <main class="flex flex-col gap-2 justify-center items-center p-5">
+        <section class="flex justify-between w-11/12">
+          <div class="flex gap-2 w-1/2">
+            <button
+              onClick={sortAddonsByStars}
+              class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${sortMode == SortMode.Stars ? "border-purple-300/80" : null}`}
+            >
+              Sort by Stars
+            </button>
+            <button
+              onClick={sortAddonsByDownloads}
+              class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${sortMode == SortMode.Downloads ? "border-purple-300/80" : null}`}
+            >
+              Sort by Downloads
+            </button>
+            <button
+              onClick={reverseAddonList}
+              class="flex gap-2 justify-center items-center bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-1/2"
+            >
+              <svg
+                width="800"
+                height="800"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 fill-purple-400"
+              >
+                <path d="M6.293 4.293a1 1 0 0 1 1.414 0l4 4a1 1 0 0 1-1.414 1.414L8 7.414V19a1 1 0 1 1-2 0V7.414L3.707 9.707a1 1 0 0 1-1.414-1.414zM16 16.586V5a1 1 0 1 1 2 0v11.586l2.293-2.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414z" />
+              </svg>
+              <p class="whitespace-nowrap">Reverse List</p>
+            </button>
+          </div>
+        </section>
         <section class="flex justify-between w-11/12">
           <div class="flex gap-1 justify-center items-center select-none">
             <div
