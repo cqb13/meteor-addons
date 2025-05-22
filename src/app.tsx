@@ -19,7 +19,6 @@ export function App() {
 
   // Sorting
   const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
-  const [reversedList, setReversedList] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
