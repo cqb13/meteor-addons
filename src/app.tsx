@@ -1,7 +1,8 @@
+import getCurrentMeteorVersion from "./helpers/getCurrentMeteorVersion";
 import { useState, useEffect } from "preact/hooks";
 import loadAddons from "./helpers/addonLoader";
-import type Addon from "./helpers/addon";
 import AddonCard from "./components/AddonCard";
+import type Addon from "./helpers/addon";
 
 enum SortMode {
   Stars,
@@ -13,10 +14,17 @@ export function App() {
   const [addons, setAddons] = useState<Addon[]>([]);
   const [visibleAddons, setVisibleAddons] = useState<Addon[]>([]);
   const [totalAddons, setTotalAddons] = useState<number>(0);
+  const [currentMeteorVersion, setCurrentMeteorVersion] = useState<
+    string | null
+  >(null);
 
   // filters
   const [searchValue, setSearchValue] = useState<string>("");
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
+  const [includeArchived, setIncludeArchived] = useState<boolean>(false);
+  const [includeForks, setIncludeForks] = useState<boolean>(false);
+  const [onlyCurrentMeteorVersion, setOnlyCurrentMeteorVersion] =
+    useState<boolean>(true);
 
   // Sorting
   const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
@@ -24,6 +32,11 @@ export function App() {
   useEffect(() => {
     (async () => {
       let addons = await loadAddons();
+      const meteorVersion = await getCurrentMeteorVersion();
+      if (meteorVersion == null) {
+        setOnlyCurrentMeteorVersion(false);
+      }
+      setCurrentMeteorVersion(meteorVersion);
       addons.sort((a: Addon, b: Addon) => b.stars - a.stars);
       setTotalAddons(addons.length);
       setAddons(addons);
@@ -32,7 +45,7 @@ export function App() {
 
   useEffect(() => {
     updateVisibleAddons();
-  }, [addons, verifiedOnly, searchValue]);
+  }, [addons, verifiedOnly, searchValue, onlyCurrentMeteorVersion]);
 
   function updateVisibleAddons() {
     let visible: Addon[] = [];
@@ -40,6 +53,9 @@ export function App() {
     addons.forEach((addon: Addon) => {
       if (
         ((verifiedOnly && addon.verified) || !verifiedOnly) &&
+        ((onlyCurrentMeteorVersion &&
+          addon.mcVersion == currentMeteorVersion) ||
+          !onlyCurrentMeteorVersion) &&
         (addon.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           addon.authors.some((author) =>
             author.toLowerCase().includes(searchValue.toLowerCase()),
@@ -91,6 +107,18 @@ export function App() {
             value={searchValue}
             class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
           />
+        </section>
+        <section class="flex gap-2 w-11/12">
+          {currentMeteorVersion && (
+            <button
+              onClick={() =>
+                setOnlyCurrentMeteorVersion(!onlyCurrentMeteorVersion)
+              }
+              class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${onlyCurrentMeteorVersion ? "border-purple-300/80" : null}`}
+            >
+              Only Current Meteor Version
+            </button>
+          )}
         </section>
         <section class="flex gap-2 w-11/12 max-sm:w-full max-[32rem]:flex-col max-[32rem]:text-sm">
           <div class="flex gap-2 w-1/2 max-md:w-3/4 max-[32rem]:w-full">
