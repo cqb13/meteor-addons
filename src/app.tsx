@@ -83,7 +83,7 @@ export function App() {
     <>
       <header></header>
       <main class="flex flex-col gap-2 justify-center items-center p-5">
-        <section class="w-11/12">
+        <section class="w-11/12 max-sm:w-full">
           <input
             type="text"
             placeholder="search here..."
@@ -92,8 +92,8 @@ export function App() {
             class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
           />
         </section>
-        <section class="flex justify-between w-11/12">
-          <div class="flex gap-2 w-1/2">
+        <section class="flex gap-2 w-11/12 max-sm:w-full max-[32rem]:flex-col max-[32rem]:text-sm">
+          <div class="flex gap-2 w-1/2 max-md:w-3/4 max-[32rem]:w-full">
             <button
               onClick={sortAddonsByStars}
               class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${sortMode == SortMode.Stars ? "border-purple-300/80" : null}`}
@@ -106,24 +106,24 @@ export function App() {
             >
               Sort by Downloads
             </button>
-            <button
-              onClick={reverseAddonList}
-              class="flex gap-2 justify-center items-center bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-1/2"
-            >
-              <svg
-                width="800"
-                height="800"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 fill-purple-400"
-              >
-                <path d="M6.293 4.293a1 1 0 0 1 1.414 0l4 4a1 1 0 0 1-1.414 1.414L8 7.414V19a1 1 0 1 1-2 0V7.414L3.707 9.707a1 1 0 0 1-1.414-1.414zM16 16.586V5a1 1 0 1 1 2 0v11.586l2.293-2.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414z" />
-              </svg>
-              <p class="whitespace-nowrap">Reverse List</p>
-            </button>
           </div>
+          <button
+            onClick={reverseAddonList}
+            class="flex gap-2 justify-center items-center bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out"
+          >
+            <svg
+              width="800"
+              height="800"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 fill-purple-400"
+            >
+              <path d="M6.293 4.293a1 1 0 0 1 1.414 0l4 4a1 1 0 0 1-1.414 1.414L8 7.414V19a1 1 0 1 1-2 0V7.414L3.707 9.707a1 1 0 0 1-1.414-1.414zM16 16.586V5a1 1 0 1 1 2 0v11.586l2.293-2.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414z" />
+            </svg>
+            <p class="whitespace-nowrap">Reverse List</p>
+          </button>
         </section>
-        <section class="flex justify-between w-11/12">
+        <section class="flex justify-between w-11/12 max-sm:w-full">
           <div class="flex gap-1 justify-center items-center select-none">
             <div
               class={`border rounded w-5 h-5 cursor-pointer hover:bg-purple-400 transition-all duration-300 ease-in-out active:bg-purple-400/50 ${verifiedOnly ? "bg-purple-500" : null}`}
