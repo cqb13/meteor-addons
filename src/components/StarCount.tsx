@@ -1,10 +1,10 @@
-import starIcon from "../assets/icons/star.svg";
+import Star from "./icons/Star";
 
 export default function StarCount({ starCount }: { starCount: number }) {
   return (
     <div class="flex gap-1 justify-center items-center select-none">
-      <img src={starIcon} alt="star" class="w-5 h-5" />
-      <p>{starCount}</p>
+      <Star style="w-3 h-3" />
+      <p class="text-xs">{starCount}</p>
     </div>
   );
 }

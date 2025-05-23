@@ -28,6 +28,11 @@ export function App() {
   // Sorting
   const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
 
+  const [addonModal, setAddonModal] = useState<boolean>(false);
+  const [currentViewedAddon, setCurrentViewedAddon] = useState<Addon | null>(
+    null,
+  );
+
   useEffect(() => {
     (async () => {
       let addons = await loadAddons();
@@ -101,6 +106,26 @@ export function App() {
   function reverseAddonList() {
     const reversedAddons = [...addons].reverse();
     setAddons(reversedAddons);
+  }
+
+  function openAddonModal(addon: Addon) {
+    disableScrolling();
+    setCurrentViewedAddon(addon);
+    setAddonModal(true);
+  }
+
+  function closeAddonModal() {
+    enableScrolling();
+    setAddonModal(false);
+    setCurrentViewedAddon(null);
+  }
+
+  function disableScrolling() {
+    document.body.style.overflow = "hidden";
+  }
+
+  function enableScrolling() {
+    document.body.style.overflow = "unset";
   }
 
   return (
@@ -187,7 +212,7 @@ export function App() {
         </section>
         <section class="flex gap-2 flex-wrap justify-center items-center">
           {visibleAddons?.map((addon: Addon, key: number) => (
-            <AddonCard addon={addon} key={key} />
+            <AddonCard addon={addon} key={key} rank={key} />
           ))}
         </section>
       </main>
