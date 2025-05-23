@@ -153,7 +153,7 @@ export function App() {
         </p>
         <p class="text-center text-xs text-slate-400">Updated every Sunday</p>
       </header>
-      <main class="flex flex-col gap-2 justify-center items-center px-5">
+      <main class="flex flex-col gap-2 items-center px-5 flex-grow">
         <section class="w-11/12 max-sm:w-full">
           <input
             type="text"
