@@ -1,4 +1,5 @@
 import formatAuthors from "../helpers/formatAuthors";
+import FeatureSection from "./FeatureSection.tsx";
 import Verified from "./icons/Verified.tsx";
 import Archived from "./icons/Archived.tsx";
 import Download from "./icons/Download.tsx";
@@ -92,16 +93,7 @@ export default function AddonModal({
               {addon.summary}
             </p>
           </section>
-          <section class="w-full">
-            <h3 class="text-purple-300 font-bold text-xl">Features</h3>
-            <ul class="flex flex-col list-disc pl-10 gap-0 text-sm">
-              {addon?.features.map((feature: string, key: number) => (
-                <li class="flex-1" key={key}>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </section>
+          <FeatureSection features={addon.features} />
         </div>
         <section class="flex items-center justify-center gap-2 w-1/2 max-md:w-3/4 max-sm:w-full pt-2">
           {addon.links.download != null && (
