@@ -1,11 +1,11 @@
 import formatAuthors from "../helpers/formatAuthors.ts";
-import DownloadCount from "./DownloadCount.tsx";
+import Download from "./icons/Download.tsx";
 import Archived from "./icons/Archived.tsx";
 import Verified from "./icons/Verified.tsx";
 import Warning from "./icons/Warning.tsx";
 import type Addon from "../helpers/addon";
 import Fork from "./icons/Fork.tsx";
-import StarCount from "./StarCount";
+import Star from "./icons/Star.tsx";
 import Button from "./Button.tsx";
 
 export default function AddonCard({
@@ -37,7 +37,7 @@ export default function AddonCard({
               class="w-16 h-16 rounded select-none"
             />
           )}
-          <div class="flex flex-col justify-center">
+          <div class="leading-tight">
             <p class="font-bold text-lg">{addon.name}</p>
             {addon.authors.length > 0 && (
               <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
@@ -55,9 +55,17 @@ export default function AddonCard({
       <div class="flex flex-col gap-1">
         <div class="flex justify-between">
           <div class="flex gap-2">
-            {addon.stars > 0 && <StarCount starCount={addon.stars} />}
+            {addon.stars > 0 && (
+              <div class="flex gap-1 justify-center items-center select-none">
+                <Star style="w-3 h-3" />
+                <p class="text-xs">{addon.stars}</p>
+              </div>
+            )}
             {addon.downloads > 0 && (
-              <DownloadCount downloadCount={addon.downloads} />
+              <div class="flex gap-1 justify-center items-center select-none">
+                <Download style="w-3 h-3" />
+                <p class="text-xs">{addon.downloads}</p>
+              </div>
             )}
           </div>
           <div class="flex gap-2">
