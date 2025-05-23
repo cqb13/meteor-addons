@@ -1,17 +1,20 @@
 import DownloadCount from "./DownloadCount.tsx";
-import Fork from "./icons/Fork.tsx";
-import Warning from "./icons/Warning.tsx";
-import Verified from "./icons/Verified.tsx";
 import Archived from "./icons/Archived.tsx";
+import Verified from "./icons/Verified.tsx";
+import Warning from "./icons/Warning.tsx";
 import type Addon from "../helpers/addon";
+import Fork from "./icons/Fork.tsx";
 import StarCount from "./StarCount";
+import Button from "./Button.tsx";
 
 export default function AddonCard({
   addon,
   rank,
+  openAddonModal,
 }: {
   addon: Addon;
   rank: number;
+  openAddonModal: (addon: Addon) => void;
 }) {
   function formatAuthors(authors: string[]) {
     if (authors.length === 0) return "";
@@ -51,11 +54,11 @@ export default function AddonCard({
             {addon.mcVersion && <p>For {addon.mcVersion}</p>}
           </div>
         </div>
-        <p class="overflow-hidden text-ellipsis line-clamp-3">
+        <p class="overflow-hidden text-ellipsis line-clamp-5">
           {addon.summary}
         </p>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col gap-1">
         <div class="flex justify-between">
           <div class="flex gap-2">
             {addon.stars > 0 && <StarCount starCount={addon.stars} />}
@@ -70,7 +73,11 @@ export default function AddonCard({
             {addon.repo.fork && <Fork style="w-5 h-5" />}
           </div>
         </div>
-        <button></button>
+        <Button
+          text="View More"
+          action={() => openAddonModal(addon)}
+          active={false}
+        />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import getCurrentMeteorVersion from "./helpers/getCurrentMeteorVersion";
 import { useState, useEffect } from "preact/hooks";
 import AddonCard from "./components/AddonCard";
 import loadAddons from "./helpers/addonLoader";
+import AddonModal from "./components/AddonModal.tsx";
 import Button from "./components/Button";
 import type Addon from "./helpers/addon";
 
@@ -195,7 +196,7 @@ export function App() {
         <section class="flex justify-between w-11/12 max-sm:w-full">
           <div class="flex gap-1 justify-center items-center select-none">
             <div
-              class={`w-5 h-5 rounded cursor-pounter border border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all ease-in-out cursor-pointer ${verifiedOnly ? "bg-purple-400/80" : "bg-slate-950/50"}`}
+              class={`w-5 h-5 rounded cursor-pounter border border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out cursor-pointer ${verifiedOnly ? "bg-purple-400/80" : "bg-slate-950/50"}`}
               onClick={() => setVerifiedOnly(!verifiedOnly)}
             />
             <p>Verified Only</p>
@@ -208,11 +209,37 @@ export function App() {
         </section>
         <section class="flex gap-2 flex-wrap justify-center items-center">
           {visibleAddons?.map((addon: Addon, key: number) => (
-            <AddonCard addon={addon} key={key} rank={key} />
+            <AddonCard
+              addon={addon}
+              key={key}
+              rank={key}
+              openAddonModal={openAddonModal}
+            />
           ))}
         </section>
       </main>
-      <footer></footer>
+      <footer class="text-sm p-4 w-full flex justify-between">
+        <a
+          href="https://github.com/cqb13/meteor-addons/blob/main/LICENSE"
+          class="hover:text-purple-400 transition-all duration-300 ease-in-out"
+          target="_blank"
+        >
+          copyright © 2025
+        </a>
+        <a
+          href="https://github.com/cqb13"
+          class="hover:text-purple-400 transition-all duration-300 ease-in-out"
+          target="_blank"
+        >
+          Created by: cqb13
+        </a>
+      </footer>
+      {addonModal && (
+        <AddonModal
+          addon={currentViewedAddon}
+          closeAddonModal={closeAddonModal}
+        />
+      )}
     </>
   );
 }
