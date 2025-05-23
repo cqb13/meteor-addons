@@ -9,6 +9,7 @@ import type Addon from "./helpers/addon";
 enum SortMode {
   Stars,
   Downloads,
+  Features,
 }
 
 export function App() {
@@ -109,6 +110,15 @@ export function App() {
     setAddons(sortedAddons);
   }
 
+  function sortAddonsByFeatures() {
+    if (sortMode == SortMode.Features) return;
+    setSortMode(SortMode.Features);
+    const sortedAddons = [...addons].sort(
+      (a: Addon, b: Addon) => b.featureCount - a.featureCount,
+    );
+    setAddons(sortedAddons);
+  }
+
   function reverseAddonList() {
     const reversedAddons = [...addons].reverse();
     setAddons(reversedAddons);
@@ -179,8 +189,8 @@ export function App() {
             />
           )}
         </section>
-        <section class="flex gap-2 w-11/12 max-sm:w-full max-[32rem]:flex-col max-[32rem]:text-sm">
-          <div class="flex gap-2 w-1/2 max-md:w-3/4 max-[32rem]:w-full">
+        <section class="flex gap-2 w-11/12  max-sm:w-full max-md:flex-col max-md:text-sm">
+          <div class="flex gap-2 w-1/2  max-md:w-full">
             <Button
               text="Sort by Stars"
               action={sortAddonsByStars}
@@ -190,6 +200,11 @@ export function App() {
               text="Sort by Downloads"
               action={sortAddonsByDownloads}
               active={sortMode == SortMode.Downloads}
+            />
+            <Button
+              text="Sort by Features"
+              action={sortAddonsByFeatures}
+              active={sortMode == SortMode.Features}
             />
           </div>
           <button
@@ -222,7 +237,7 @@ export function App() {
             </p>
           </div>
         </section>
-        <section class="flex gap-2 flex-wrap justify-center items-center">
+        <section class="flex gap-2 flex-wrap justify-center items-center w-full">
           {visibleAddons?.map((addon: Addon, key: number) => (
             <AddonCard
               addon={addon}

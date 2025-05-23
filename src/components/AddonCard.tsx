@@ -23,7 +23,7 @@ export default function AddonCard({
         <p class="absolute top-1 right-1 text-xs text-slate-400/20 select-none">
           {rank + 1}
         </p>
-        <div class="flex gap-1 items-center">
+        <div class="flex gap-2 items-center">
           {addon.icon ? (
             <img
               src={addon.icon}
