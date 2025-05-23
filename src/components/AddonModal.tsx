@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import type Addon from "../helpers/addon";
 import LinkButton from "./LinkButton";
+import { useEffect } from "react";
 
 export default function AddonModal({
   addon,

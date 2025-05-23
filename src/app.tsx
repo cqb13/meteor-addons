@@ -1,8 +1,8 @@
 import getCurrentMeteorVersion from "./helpers/getCurrentMeteorVersion";
-import { useState, useEffect } from "preact/hooks";
-import AddonCard from "./components/AddonCard";
-import loadAddons from "./helpers/addonLoader";
 import AddonModal from "./components/AddonModal.tsx";
+import { useState, useEffect } from "preact/hooks";
+import loadAddons from "./helpers/addonLoader";
+import AddonCard from "./components/AddonCard";
 import Button from "./components/Button";
 import type Addon from "./helpers/addon";
 
