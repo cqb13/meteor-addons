@@ -60,7 +60,7 @@ export default function AddonModal({
                 {addon.mcVersion && <p>For {addon.mcVersion}</p>}
               </div>
             </div>
-            <p class="text-wrap break-words  [word-break:break-word]">
+            <p class="text-wrap break-words [word-break:break-word]">
               {addon.summary}
             </p>
           </section>

@@ -24,6 +24,7 @@ export function App() {
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(true);
   const [includeArchived, setIncludeArchived] = useState<boolean>(false);
   const [includeForks, setIncludeForks] = useState<boolean>(false);
+  const [onlyWithReleases, setOnlyWithReleases] = useState<boolean>(true);
   const [onlyCurrentMeteorVersion, setOnlyCurrentMeteorVersion] =
     useState<boolean>(false);
 
@@ -57,6 +58,7 @@ export function App() {
     searchValue,
     includeForks,
     includeArchived,
+    onlyWithReleases,
     onlyCurrentMeteorVersion,
   ]);
 
@@ -68,6 +70,8 @@ export function App() {
         ((verifiedOnly && addon.verified) || !verifiedOnly) &&
         ((!includeForks && !addon.repo.fork) || includeForks) &&
         ((!includeArchived && !addon.repo.archived) || includeArchived) &&
+        ((onlyWithReleases && addon.links.download != null) ||
+          !onlyWithReleases) &&
         ((onlyCurrentMeteorVersion &&
           addon.mcVersion == currentMeteorVersion) ||
           !onlyCurrentMeteorVersion) &&
@@ -132,8 +136,14 @@ export function App() {
 
   return (
     <>
-      <header></header>
-      <main class="flex flex-col gap-2 justify-center items-center p-5">
+      <header class="p-5 text-7xl font-bold">
+        <h1 class="text-center">Meteor Addons</h1>
+        <p class="text-center text-sm text-slate-400">
+          A list of free and open-source Meteor Client addons
+        </p>
+        <p class="text-center text-xs text-slate-400">Updated every Sunday</p>
+      </header>
+      <main class="flex flex-col gap-2 justify-center items-center px-5">
         <section class="w-11/12 max-sm:w-full">
           <input
             type="text"
@@ -154,9 +164,14 @@ export function App() {
             action={() => setIncludeArchived(!includeArchived)}
             active={includeArchived}
           />
+          <Button
+            text="Only With Releases"
+            action={() => setOnlyWithReleases(!onlyWithReleases)}
+            active={onlyWithReleases}
+          />
           {currentMeteorVersion && (
             <Button
-              text="Only Current Meteor Version"
+              text={`Only For ${currentMeteorVersion}`}
               action={() =>
                 setOnlyCurrentMeteorVersion(!onlyCurrentMeteorVersion)
               }
