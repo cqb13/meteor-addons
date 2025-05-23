@@ -1,3 +1,4 @@
+import formatAuthors from "../helpers/formatAuthors.ts";
 import DownloadCount from "./DownloadCount.tsx";
 import Archived from "./icons/Archived.tsx";
 import Verified from "./icons/Verified.tsx";
@@ -16,14 +17,6 @@ export default function AddonCard({
   rank: number;
   openAddonModal: (addon: Addon) => void;
 }) {
-  function formatAuthors(authors: string[]) {
-    if (authors.length === 0) return "";
-    else if (authors.length === 1) return `By ${authors[0]}`;
-    else if (authors.length === 2) return `By ${authors[0]} and ${authors[1]}`;
-    else
-      return `By ${authors.slice(0, -1).join(", ")} and ${authors[authors.length - 1]}`;
-  }
-
   return (
     <div class="w-1/4 max-xl:w-5/12 max-md:w-3/4 max-sm:w-full h-80 border border-purple-300/20 rounded p-2 bg-slate-950/50 text-slate-400 flex flex-col justify-between relative">
       <div>
@@ -54,7 +47,8 @@ export default function AddonCard({
             {addon.mcVersion && <p>For {addon.mcVersion}</p>}
           </div>
         </div>
-        <p class="overflow-hidden text-ellipsis line-clamp-5">
+
+        <p class="overflow-hidden text-ellipsis line-clamp-5 [overflow-wrap:anywhere] [word-break:break-word]">
           {addon.summary}
         </p>
       </div>

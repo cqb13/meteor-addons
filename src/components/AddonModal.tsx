@@ -1,3 +1,4 @@
+import formatAuthors from "../helpers/formatAuthors";
 import type Addon from "../helpers/addon";
 import LinkButton from "./LinkButton";
 import { useEffect } from "react";
@@ -34,10 +35,38 @@ export default function AddonModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div class="w-full">
-          <section></section>
+          <section>
+            <div class="flex gap-2">
+              {addon.icon ? (
+                <img
+                  src={addon.icon}
+                  alt="icon"
+                  class="w-20 h-2k rounded select-none"
+                />
+              ) : (
+                <img
+                  src="https://raw.githubusercontent.com/MeteorDevelopment/meteor-addon-template/refs/heads/master/src/main/resources/assets/template/icon.png"
+                  alt="icon"
+                  class="w-16 h-16 rounded select-none"
+                />
+              )}
+              <div>
+                <h2 className="text-2xl font-bold font-purple-300">
+                  {addon.name}
+                </h2>
+                <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
+                  {formatAuthors(addon.authors)}
+                </p>
+                {addon.mcVersion && <p>For {addon.mcVersion}</p>}
+              </div>
+            </div>
+            <p class="text-wrap break-words  [word-break:break-word]">
+              {addon.summary}
+            </p>
+          </section>
           <section class="w-full">
-            <h2 class="text-purple-300 font-bold text-xl">Features</h2>
-            <ul class="flex flex-col list-disc pl-10 gap-0">
+            <h3 class="text-purple-300 font-bold text-xl">Features</h3>
+            <ul class="flex flex-col list-disc pl-10 gap-0 text-sm">
               {addon?.features.map((feature: string, key: number) => (
                 <li class="flex-1" key={key}>
                   {feature}
