@@ -22,7 +22,7 @@ export default function AddonCard({
   }
 
   return (
-    <div class="w-96 h-52 border border-purple-300/20 rounded p-2 bg-slate-950/50 text-slate-400 flex flex-col justify-between relative">
+    <div class="w-1/4 max-xl:w-5/12 max-md:w-3/4 max-sm:w-full h-80 border border-purple-300/20 rounded p-2 bg-slate-950/50 text-slate-400 flex flex-col justify-between relative">
       <div>
         <p class="absolute top-1 right-1 text-xs text-slate-400/20 select-none">
           {rank + 1}
@@ -55,19 +55,22 @@ export default function AddonCard({
           {addon.summary}
         </p>
       </div>
-      <div class="flex justify-between">
-        <div class="flex gap-2">
-          {addon.stars > 0 && <StarCount starCount={addon.stars} />}
-          {addon.downloads > 0 && (
-            <DownloadCount downloadCount={addon.downloads} />
-          )}
+      <div class="flex flex-col">
+        <div class="flex justify-between">
+          <div class="flex gap-2">
+            {addon.stars > 0 && <StarCount starCount={addon.stars} />}
+            {addon.downloads > 0 && (
+              <DownloadCount downloadCount={addon.downloads} />
+            )}
+          </div>
+          <div class="flex gap-2">
+            {addon.verified && <Verified style="h-5 w-5" />}
+            {!addon.verified && false && <Warning style="h-5 w-5" />}
+            {addon.repo.archived && <Archived style="w-5 h-5" />}
+            {addon.repo.fork && <Fork style="w-5 h-5" />}
+          </div>
         </div>
-        <div class="flex gap-2">
-          {addon.verified && <Verified style="h-5 w-5" />}
-          {!addon.verified && false && <Warning style="h-5 w-5" />}
-          {addon.repo.archived && <Archived style="w-5 h-5" />}
-          {addon.repo.fork && <Fork style="w-5 h-5" />}
-        </div>
+        <button></button>
       </div>
     </div>
   );

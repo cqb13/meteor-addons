@@ -1,7 +1,8 @@
 import getCurrentMeteorVersion from "./helpers/getCurrentMeteorVersion";
 import { useState, useEffect } from "preact/hooks";
-import loadAddons from "./helpers/addonLoader";
 import AddonCard from "./components/AddonCard";
+import loadAddons from "./helpers/addonLoader";
+import Button from "./components/Button";
 import type Addon from "./helpers/addon";
 
 enum SortMode {
@@ -142,43 +143,38 @@ export function App() {
           />
         </section>
         <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">
-          <button
-            onClick={() => setIncludeForks(!includeForks)}
-            class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${includeForks ? "border-purple-300/80" : null}`}
-          >
-            Include Forks
-          </button>
-          <button
-            onClick={() => setIncludeArchived(!includeArchived)}
-            class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${includeArchived ? "border-purple-300/80" : null}`}
-          >
-            Include Archived
-          </button>
+          <Button
+            text="Include Forks"
+            action={() => setIncludeForks(!includeForks)}
+            active={includeForks}
+          />
+          <Button
+            text="Include Archived"
+            action={() => setIncludeArchived(!includeArchived)}
+            active={includeArchived}
+          />
           {currentMeteorVersion && (
-            <button
-              onClick={() =>
+            <Button
+              text="Only Current Meteor Version"
+              action={() =>
                 setOnlyCurrentMeteorVersion(!onlyCurrentMeteorVersion)
               }
-              class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${onlyCurrentMeteorVersion ? "border-purple-300/80" : null}`}
-            >
-              Only Current Meteor Version
-            </button>
+              active={onlyCurrentMeteorVersion}
+            />
           )}
         </section>
         <section class="flex gap-2 w-11/12 max-sm:w-full max-[32rem]:flex-col max-[32rem]:text-sm">
           <div class="flex gap-2 w-1/2 max-md:w-3/4 max-[32rem]:w-full">
-            <button
-              onClick={sortAddonsByStars}
-              class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${sortMode == SortMode.Stars ? "border-purple-300/80" : null}`}
-            >
-              Sort by Stars
-            </button>
-            <button
-              onClick={sortAddonsByDownloads}
-              class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${sortMode == SortMode.Downloads ? "border-purple-300/80" : null}`}
-            >
-              Sort by Downloads
-            </button>
+            <Button
+              text="Sort by Stars"
+              action={sortAddonsByStars}
+              active={sortMode == SortMode.Stars}
+            />
+            <Button
+              text="Sort by Downloads"
+              action={sortAddonsByDownloads}
+              active={sortMode == SortMode.Downloads}
+            />
           </div>
           <button
             onClick={reverseAddonList}
