@@ -19,11 +19,11 @@ export function App() {
 
   // filters
   const [searchValue, setSearchValue] = useState<string>("");
-  const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
+  const [verifiedOnly, setVerifiedOnly] = useState<boolean>(true);
   const [includeArchived, setIncludeArchived] = useState<boolean>(false);
   const [includeForks, setIncludeForks] = useState<boolean>(false);
   const [onlyCurrentMeteorVersion, setOnlyCurrentMeteorVersion] =
-    useState<boolean>(true);
+    useState<boolean>(false);
 
   // Sorting
   const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
@@ -116,7 +116,7 @@ export function App() {
             class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
           />
         </section>
-        <section class="flex gap-2 w-11/12">
+        <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">
           <button
             onClick={() => setIncludeForks(!includeForks)}
             class={`bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${includeForks ? "border-purple-300/80" : null}`}
@@ -174,7 +174,7 @@ export function App() {
         <section class="flex justify-between w-11/12 max-sm:w-full">
           <div class="flex gap-1 justify-center items-center select-none">
             <div
-              class={`border rounded w-5 h-5 cursor-pointer hover:bg-purple-400 transition-all duration-300 ease-in-out active:bg-purple-400/50 ${verifiedOnly ? "bg-purple-500" : null}`}
+              class={`w-5 h-5 rounded cursor-pounter border border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all ease-in-out cursor-pointer ${verifiedOnly ? "bg-purple-400/80" : "bg-slate-950/50"}`}
               onClick={() => setVerifiedOnly(!verifiedOnly)}
             />
             <p>Verified Only</p>
