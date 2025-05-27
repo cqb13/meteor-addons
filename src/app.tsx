@@ -74,7 +74,7 @@ export function App() {
         ((onlyWithReleases && addon.links.download != "") ||
           !onlyWithReleases) &&
         ((onlyCurrentMeteorVersion &&
-          addon.mcVersion == currentMeteorVersion) ||
+          addon.mc_version == currentMeteorVersion) ||
           !onlyCurrentMeteorVersion) &&
         (addon.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           addon.authors.some((author) =>
@@ -125,6 +125,7 @@ export function App() {
   }
 
   function openAddonModal(addon: Addon) {
+    console.log(addon);
     disableScrolling();
     setCurrentViewedAddon(addon);
     setAddonModal(true);

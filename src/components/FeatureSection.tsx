@@ -35,17 +35,19 @@ export default function FeatureSection({ features }: { features: string[] }) {
           </button>
         )}
       </div>
-      <ul
-        className={`flex flex-col list-disc pl-10 gap-0 text-sm transition-all duration-300 overflow-hidden ${
-          isLong && !isExpanded ? "max-h-64 overflow-y-hidden" : "max-h-full"
-        }`}
-      >
-        {features.map((feature: string, key: number) => (
-          <li className="flex-1" key={key}>
-            {feature}
-          </li>
-        ))}
-      </ul>
+      {features.length > 0 && (
+        <ul
+          className={`flex flex-col list-disc pl-10 gap-0 text-sm transition-all duration-300 overflow-hidden ${
+            isLong && !isExpanded ? "max-h-64 overflow-y-hidden" : "max-h-full"
+          }`}
+        >
+          {features.map((feature: string, key: number) => (
+            <li className="flex-1" key={key}>
+              {feature}
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }

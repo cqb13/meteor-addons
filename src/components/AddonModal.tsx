@@ -64,7 +64,7 @@ export default function AddonModal({
                 <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
                   {formatAuthors(addon.authors)}
                 </p>
-                {addon.mcVersion && <p>For {addon.mcVersion}</p>}
+                {addon.mc_version != "" && <p>For {addon.mc_version}</p>}
               </div>
             </div>
             <div class="flex justify-between items-center py-2">

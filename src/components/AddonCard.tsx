@@ -44,7 +44,7 @@ export default function AddonCard({
                 {formatAuthors(addon.authors)}
               </p>
             )}
-            {addon.mcVersion && <p>For {addon.mcVersion}</p>}
+            {addon.mc_version != "" && <p>For {addon.mc_version}</p>}
           </div>
         </div>
 

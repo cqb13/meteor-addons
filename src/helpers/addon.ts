@@ -1,7 +1,7 @@
 export default interface Addon {
   name: string;
   description: string;
-  mcVersion: string;
+  mc_version: string;
   authors: string[];
   features: string[];
   featureCount: number;
