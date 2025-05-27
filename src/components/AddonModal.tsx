@@ -44,9 +44,9 @@ export default function AddonModal({
         <div class="w-full">
           <section>
             <div class="flex gap-2">
-              {addon.icon ? (
+              {addon.links.icon != "" ? (
                 <img
-                  src={addon.icon}
+                  src={addon.links.icon}
                   alt="icon"
                   class="w-20 h-2k rounded select-none"
                 />
@@ -69,16 +69,16 @@ export default function AddonModal({
             </div>
             <div class="flex justify-between items-center py-2">
               <div class="flex gap-2">
-                {addon.stars > 0 && (
+                {addon.repo.stars > 0 && (
                   <div class="flex gap-1 justify-center items-center select-none">
                     <Star style="w-5 h-5" />
-                    <p>{addon.stars}</p>
+                    <p>{addon.repo.stars}</p>
                   </div>
                 )}
-                {addon.downloads > 0 && (
+                {addon.repo.downloads > 0 && (
                   <div class="flex gap-1 justify-center items-center select-none">
                     <Download style="w-5 h-5" />
-                    <p>{addon.downloads}</p>
+                    <p>{addon.repo.downloads}</p>
                   </div>
                 )}
               </div>
@@ -90,16 +90,16 @@ export default function AddonModal({
               </div>
             </div>
             <p class="text-wrap break-words [word-break:break-word]">
-              {addon.summary}
+              {addon.description}
             </p>
           </section>
           <FeatureSection features={addon.features} />
         </div>
         <section class="flex items-center justify-center gap-2 w-1/2 max-md:w-3/4 max-sm:w-full pt-2">
-          {addon.links.download != null && (
+          {addon.links.download != "" && (
             <LinkButton destination={addon.links.download} text="Download" />
           )}
-          {addon.links.github != null && (
+          {addon.links.github != "" && (
             <a href={addon.links.github} target="_blank">
               <svg
                 width="800"
@@ -112,7 +112,7 @@ export default function AddonModal({
               </svg>
             </a>
           )}
-          {addon.links.discord != null && (
+          {addon.links.discord != "" && (
             <a href={addon.links.discord} target="_blank">
               <svg
                 width="800"
@@ -125,7 +125,7 @@ export default function AddonModal({
               </svg>
             </a>
           )}
-          {addon.links.homepage != null && (
+          {addon.links.homepage != "" && (
             <a href={addon.links.homepage} target="_blank">
               <svg
                 width="800"

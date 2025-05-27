@@ -24,9 +24,9 @@ export default function AddonCard({
           {rank + 1}
         </p>
         <div class="flex gap-2 items-center">
-          {addon.icon ? (
+          {addon.links.icon != "" ? (
             <img
-              src={addon.icon}
+              src={addon.links.icon}
               alt="icon"
               class="w-16 h-16 rounded select-none"
             />
@@ -49,22 +49,22 @@ export default function AddonCard({
         </div>
 
         <p class="overflow-hidden text-ellipsis line-clamp-5 [overflow-wrap:anywhere] [word-break:break-word]">
-          {addon.summary}
+          {addon.description}
         </p>
       </div>
       <div class="flex flex-col gap-1">
         <div class="flex justify-between">
           <div class="flex gap-2">
-            {addon.stars > 0 && (
+            {addon.repo.stars > 0 && (
               <div class="flex gap-1 justify-center items-center select-none">
                 <Star style="w-3 h-3" />
-                <p class="text-xs">{addon.stars}</p>
+                <p class="text-xs">{addon.repo.stars}</p>
               </div>
             )}
-            {addon.downloads > 0 && (
+            {addon.repo.downloads > 0 && (
               <div class="flex gap-1 justify-center items-center select-none">
                 <Download style="w-3 h-3" />
-                <p class="text-xs">{addon.downloads}</p>
+                <p class="text-xs">{addon.repo.downloads}</p>
               </div>
             )}
           </div>

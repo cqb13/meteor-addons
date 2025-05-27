@@ -45,7 +45,7 @@ export function App() {
         setOnlyCurrentMeteorVersion(false);
       }
       setCurrentMeteorVersion(meteorVersion);
-      addons.sort((a: Addon, b: Addon) => b.stars - a.stars);
+      addons.sort((a: Addon, b: Addon) => b.repo.stars - a.repo.stars);
       setTotalAddons(addons.length);
       setAddons(addons);
     })();
@@ -71,7 +71,7 @@ export function App() {
         ((verifiedOnly && addon.verified) || !verifiedOnly) &&
         ((!includeForks && !addon.repo.fork) || includeForks) &&
         ((!includeArchived && !addon.repo.archived) || includeArchived) &&
-        ((onlyWithReleases && addon.links.download != null) ||
+        ((onlyWithReleases && addon.links.download != "") ||
           !onlyWithReleases) &&
         ((onlyCurrentMeteorVersion &&
           addon.mcVersion == currentMeteorVersion) ||
@@ -96,7 +96,7 @@ export function App() {
     if (sortMode == SortMode.Stars) return;
     setSortMode(SortMode.Stars);
     const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) => b.stars - a.stars,
+      (a: Addon, b: Addon) => b.repo.stars - a.repo.stars,
     );
     setAddons(sortedAddons);
   }
@@ -105,7 +105,7 @@ export function App() {
     if (sortMode == SortMode.Downloads) return;
     setSortMode(SortMode.Downloads);
     const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) => b.downloads - a.downloads,
+      (a: Addon, b: Addon) => b.repo.downloads - a.repo.downloads,
     );
     setAddons(sortedAddons);
   }
