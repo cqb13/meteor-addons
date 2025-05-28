@@ -4,7 +4,7 @@ export default interface Addon {
   mc_version: string;
   authors: string[];
   features: string[];
-  featureCount: number;
+  feature_count: number;
   verified: boolean;
   repo: {
     id: string;
@@ -14,8 +14,8 @@ export default interface Addon {
     fork: boolean;
     stars: number;
     downloads: number;
-    lastUpdate: string;
-    creationDate: string;
+    last_update: string;
+    creation_date: string;
   };
   links: {
     github: string;

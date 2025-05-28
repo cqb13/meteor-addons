@@ -93,7 +93,7 @@ export default function AddonModal({
               {addon.description}
             </p>
           </section>
-          <FeatureSection features={addon.features} />
+          {addon.features && <FeatureSection features={addon.features} />}
         </div>
         <section class="flex items-center justify-center gap-2 w-1/2 max-md:w-3/4 max-sm:w-full pt-2">
           {addon.links.download != "" && (

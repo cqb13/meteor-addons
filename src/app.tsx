@@ -1,4 +1,5 @@
 import getCurrentMeteorVersion from "./helpers/getCurrentMeteorVersion";
+import SortModeDropdown from "./components/SortModeDropdown.tsx";
 import AddonModal from "./components/AddonModal.tsx";
 import { useState, useEffect } from "preact/hooks";
 import loadAddons from "./helpers/addonLoader";
@@ -6,10 +7,30 @@ import AddonCard from "./components/AddonCard";
 import Button from "./components/Button";
 import type Addon from "./helpers/addon";
 
-enum SortMode {
+export enum SortMode {
   Stars,
   Downloads,
   Features,
+  Age,
+  LastUpdate,
+  McVersion,
+}
+
+export function sortModeToString(sortMode: SortMode): string {
+  switch (sortMode) {
+    case SortMode.Stars:
+      return "Stars";
+    case SortMode.Downloads:
+      return "Downloads";
+    case SortMode.Features:
+      return "Features";
+    case SortMode.Age:
+      return "Age";
+    case SortMode.LastUpdate:
+      return "Last Update";
+    case SortMode.McVersion:
+      return "Minecraft Version";
+  }
 }
 
 export function App() {
@@ -31,7 +52,6 @@ export function App() {
 
   // Sorting
   const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
-
   const [addonModal, setAddonModal] = useState<boolean>(false);
   const [currentViewedAddon, setCurrentViewedAddon] = useState<Addon | null>(
     null,
@@ -92,6 +112,29 @@ export function App() {
     setSearchValue(event.target.value);
   }
 
+  function sortAddons(mode: SortMode) {
+    switch (mode) {
+      case SortMode.Stars:
+        sortAddonsByStars();
+        break;
+      case SortMode.Downloads:
+        sortAddonsByDownloads();
+        break;
+      case SortMode.Features:
+        sortAddonsByFeatures();
+        break;
+      case SortMode.Age:
+        sortAddonsByAge();
+        break;
+      case SortMode.LastUpdate:
+        sortAddonsByLastUpdate();
+        break;
+      case SortMode.McVersion:
+        sortAddonsByMinecraftVersion();
+        break;
+    }
+  }
+
   function sortAddonsByStars() {
     if (sortMode == SortMode.Stars) return;
     setSortMode(SortMode.Stars);
@@ -114,8 +157,53 @@ export function App() {
     if (sortMode == SortMode.Features) return;
     setSortMode(SortMode.Features);
     const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) => b.featureCount - a.featureCount,
+      (a: Addon, b: Addon) => b.feature_count - a.feature_count,
     );
+    setAddons(sortedAddons);
+  }
+
+  function sortAddonsByAge() {
+    if (sortMode == SortMode.Age) return;
+    setSortMode(SortMode.Age);
+    const sortedAddons = [...addons].sort(
+      (a: Addon, b: Addon) =>
+        new Date(a.repo.creation_date).getTime() -
+        new Date(b.repo.creation_date).getTime(),
+    );
+    setAddons(sortedAddons);
+  }
+
+  function sortAddonsByLastUpdate() {
+    if (sortMode == SortMode.LastUpdate) return;
+    setSortMode(SortMode.LastUpdate);
+    const sortedAddons = [...addons].sort(
+      (a: Addon, b: Addon) =>
+        new Date(a.repo.last_update).getTime() -
+        new Date(b.repo.last_update).getTime(),
+    );
+    setAddons(sortedAddons);
+  }
+
+  function sortAddonsByMinecraftVersion() {
+    if (sortMode == SortMode.McVersion) return;
+    setSortMode(SortMode.McVersion);
+    const sortedAddons = [...addons].sort((a: Addon, b: Addon) => {
+      // Empty strings go last
+      if (!a) return 1;
+      if (!b) return -1;
+
+      const aParts = a.mc_version.split(".").map(Number);
+      const bParts = b.mc_version.split(".").map(Number);
+
+      // Compare parts one by one
+      for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+        const aNum = aParts[i] ?? 0;
+        const bNum = bParts[i] ?? 0;
+        if (aNum !== bNum) return bNum - aNum;
+      }
+
+      return 0;
+    });
     setAddons(sortedAddons);
   }
 
@@ -125,7 +213,6 @@ export function App() {
   }
 
   function openAddonModal(addon: Addon) {
-    console.log(addon);
     disableScrolling();
     setCurrentViewedAddon(addon);
     setAddonModal(true);
@@ -190,24 +277,19 @@ export function App() {
             />
           )}
         </section>
-        <section class="flex gap-2 w-11/12  max-sm:w-full max-md:flex-col max-md:text-sm">
-          <div class="flex gap-2 w-1/2  max-md:w-full">
-            <Button
-              text="Sort by Stars"
-              action={sortAddonsByStars}
-              active={sortMode == SortMode.Stars}
-            />
-            <Button
-              text="Sort by Downloads"
-              action={sortAddonsByDownloads}
-              active={sortMode == SortMode.Downloads}
-            />
-            <Button
-              text="Sort by Features"
-              action={sortAddonsByFeatures}
-              active={sortMode == SortMode.Features}
-            />
-          </div>
+        <section class="flex gap-2 w-11/12 max-sm:w-full">
+          <SortModeDropdown
+            selectedMode={sortMode}
+            items={[
+              SortMode.Stars,
+              SortMode.Downloads,
+              SortMode.Features,
+              SortMode.Age,
+              SortMode.LastUpdate,
+              SortMode.McVersion,
+            ]}
+            updateMode={(mode: SortMode) => sortAddons(mode)}
+          />
           <button
             onClick={reverseAddonList}
             class="flex gap-2 justify-center items-center bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out"
