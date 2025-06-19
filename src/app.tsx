@@ -1,3 +1,4 @@
+import getDaysSinceUpdatedAddons from "./helpers/getDaysSinceUpdate.ts";
 import getCurrentMeteorVersion from "./helpers/getCurrentMeteorVersion";
 import SortModeDropdown from "./components/SortModeDropdown.tsx";
 import AddonModal from "./components/AddonModal.tsx";
@@ -34,6 +35,7 @@ export function sortModeToString(sortMode: SortMode): string {
 }
 
 export function App() {
+  const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [addons, setAddons] = useState<Addon[]>([]);
   const [visibleAddons, setVisibleAddons] = useState<Addon[]>([]);
   const [totalAddons, setTotalAddons] = useState<number>(0);
@@ -68,6 +70,9 @@ export function App() {
       addons.sort((a: Addon, b: Addon) => b.repo.stars - a.repo.stars);
       setTotalAddons(addons.length);
       setAddons(addons);
+
+      let daysSince = await getDaysSinceUpdatedAddons();
+      setLastUpdate(daysSince);
     })();
   }, []);
 
@@ -239,7 +244,9 @@ export function App() {
         <p class="text-center text-sm text-slate-400">
           A list of free and open-source Meteor Client addons
         </p>
-        <p class="text-center text-xs text-slate-400">Updated every Sunday</p>
+        {lastUpdate && (
+          <p class="text-center text-xs text-slate-400">{lastUpdate}</p>
+        )}
       </header>
       <main class="flex flex-col gap-2 items-center px-5 flex-grow">
         <section class="w-11/12 max-sm:w-full">
