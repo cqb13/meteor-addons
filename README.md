@@ -1,5 +1,5 @@
 # Meteor Addons
 
-A list of free and open-source Meteor Client addons, based on [AntiCope](https://anticope.pages.dev/).
+<a href="https://discord.gg/XU7Y9G46KD"><img src="https://invidget.switchblade.xyz/XU7Y9G46KD"></a>
 
-This list will be updated weekly
+A list of free and open-source Meteor Client addons, based on [AntiCope](https://anticope.pages.dev/).

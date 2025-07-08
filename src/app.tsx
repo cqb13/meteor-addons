@@ -7,7 +7,6 @@ import loadAddons from "./helpers/addonLoader";
 import AddonCard from "./components/AddonCard";
 import Button from "./components/Button";
 import type Addon from "./helpers/addon";
-
 export enum SortMode {
   Stars,
   Downloads,
