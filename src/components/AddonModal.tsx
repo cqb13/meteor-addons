@@ -34,7 +34,7 @@ export default function AddonModal({
 
   return (
     <section
-      className="bg-slate-950/20 backdrop-blur-lg w-screen h-screen fixed top-0 left-0 flex items-center justify-center"
+      className="bg-slate-950/20 backdrop-blur-lg w-screen h-screen fixed top-0 left-0 flex items-center justify-center z-50"
       onClick={closeAddonModal}
     >
       <div
