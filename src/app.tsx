@@ -161,7 +161,8 @@ export function App() {
     if (sortMode == SortMode.Features) return;
     setSortMode(SortMode.Features);
     const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) => b.feature_count - a.feature_count,
+      (a: Addon, b: Addon) =>
+        b.features.feature_count - a.features.feature_count,
     );
     setAddons(sortedAddons);
   }

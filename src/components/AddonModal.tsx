@@ -38,7 +38,7 @@ export default function AddonModal({
       onClick={closeAddonModal}
     >
       <div
-        className="z-20 bg-slate-900 border border-purple-300/20 rounded w-3/4 h-11/12 overflow-scroll flex flex-col justify-between items-center p-5 text-slate-400 max-sm:w-11/12"
+        className="z-20 bg-slate-900 border border-purple-300/20 rounded w-3/4 h-11/12 flex flex-col justify-between items-center p-5 text-slate-400 max-sm:w-11/12"
         onClick={(e) => e.stopPropagation()}
       >
         <div class="w-full">

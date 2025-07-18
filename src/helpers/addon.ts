@@ -3,8 +3,7 @@ export default interface Addon {
   description: string;
   mc_version: string;
   authors: string[];
-  features: string[];
-  feature_count: number;
+  features: Features;
   verified: boolean;
   repo: {
     id: string;
@@ -24,4 +23,11 @@ export default interface Addon {
     homepage: string;
     icon: string;
   };
+}
+
+export interface Features {
+  modules: string[];
+  commands: string[];
+  hud_elements: string[];
+  feature_count: number;
 }

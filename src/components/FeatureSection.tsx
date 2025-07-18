@@ -1,53 +1,54 @@
-import { useState } from "react";
+import type { Features } from "../helpers/addon";
 
-export default function FeatureSection({ features }: { features: string[] }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const isLong = features.length > 50;
-
-  const toggleExpanded = () => setIsExpanded((prev) => !prev);
-
+export default function FeatureSection({ features }: { features: Features }) {
   return (
-    <section className="w-full">
+    <section className="w-full flex flex-col h-full">
       <div className="flex items-center justify-between">
         <h3 className="text-purple-300 font-bold text-xl">Features</h3>
-        {isLong && (
-          <button onClick={toggleExpanded} className="text-purple-300">
-            <svg
-              className={`w-5 h-5 cursor-pointer transform transition-transform duration-300 ease-in-out ${
-                isExpanded ? "rotate-180" : "rotate-0"
-              }`}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {isExpanded ? (
-                <line x1="5" y1="12" x2="19" y2="12" />
-              ) : (
-                <>
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </>
-              )}
-            </svg>
-          </button>
-        )}
       </div>
-      {features.length > 0 && (
-        <ul
-          className={`flex flex-col list-disc pl-10 gap-0 text-sm transition-all duration-300 overflow-hidden ${
-            isLong && !isExpanded ? "max-h-64 overflow-y-hidden" : "max-h-full"
-          }`}
-        >
-          {features.map((feature: string, key: number) => (
-            <li className="flex-1" key={key}>
-              {feature}
-            </li>
-          ))}
-        </ul>
-      )}
+
+      <div
+        className={`flex-1 overflow-scroll max-h-[40rem] transition-all duration-300 ease-in-out `}
+      >
+        <div className="h-full overflow-y-auto pr-2">
+          {features.modules && (
+            <div>
+              <h4 className="font-bold text-purple-300">
+                Modules ({features.modules.length})
+              </h4>
+              <ul className="flex flex-col list-disc pl-10 gap-0 text-sm">
+                {features.modules.map((feature: string, key: number) => (
+                  <li key={key}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {features.commands && (
+            <div>
+              <h4 className="font-bold text-purple-300">
+                Commands ({features.commands.length})
+              </h4>
+              <ul className="flex flex-col list-disc pl-10 gap-0 text-sm">
+                {features.commands.map((feature: string, key: number) => (
+                  <li key={key}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {features.hud_elements && (
+            <div>
+              <h4 className="font-bold text-purple-300">
+                HUD Elements ({features.hud_elements.length})
+              </h4>
+              <ul className="flex flex-col list-disc pl-10 gap-0 text-sm">
+                {features.hud_elements.map((feature: string, key: number) => (
+                  <li key={key}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
     </section>
   );
 }
