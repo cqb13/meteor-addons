@@ -23,6 +23,13 @@ export default interface Addon {
     homepage: string;
     icon: string;
   };
+  custom: {
+    description: string;
+    supported_versions: string[];
+    icon: string;
+    discord: string;
+    homepage: string;
+  };
 }
 
 export interface Features {

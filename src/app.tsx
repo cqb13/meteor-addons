@@ -1,5 +1,5 @@
+import VersionFilterDropdown from "./components/VersionFilterDropdown.tsx";
 import getDaysSinceUpdatedAddons from "./helpers/getDaysSinceUpdate.ts";
-import getCurrentMeteorVersion from "./helpers/getCurrentMeteorVersion";
 import SortModeDropdown from "./components/SortModeDropdown.tsx";
 import AddonModal from "./components/AddonModal.tsx";
 import { useState, useEffect } from "preact/hooks";
@@ -38,9 +38,7 @@ export function App() {
   const [addons, setAddons] = useState<Addon[]>([]);
   const [visibleAddons, setVisibleAddons] = useState<Addon[]>([]);
   const [totalAddons, setTotalAddons] = useState<number>(0);
-  const [currentMeteorVersion, setCurrentMeteorVersion] = useState<
-    string | null
-  >(null);
+  const [allVersions, setAllVersions] = useState<string[]>([]);
 
   // filters
   const [searchValue, setSearchValue] = useState<string>("");
@@ -48,8 +46,7 @@ export function App() {
   const [includeArchived, setIncludeArchived] = useState<boolean>(false);
   const [includeForks, setIncludeForks] = useState<boolean>(false);
   const [onlyWithReleases, setOnlyWithReleases] = useState<boolean>(true);
-  const [onlyCurrentMeteorVersion, setOnlyCurrentMeteorVersion] =
-    useState<boolean>(false);
+  const [selectedVersion, setSelectedVersion] = useState<string>("All");
 
   // Sorting
   const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
@@ -61,12 +58,33 @@ export function App() {
   useEffect(() => {
     (async () => {
       let addons = await loadAddons();
-      const meteorVersion = await getCurrentMeteorVersion();
-      if (meteorVersion == null) {
-        setOnlyCurrentMeteorVersion(false);
-      }
-      setCurrentMeteorVersion(meteorVersion);
       addons.sort((a: Addon, b: Addon) => b.repo.stars - a.repo.stars);
+
+      let versions: string[] = [];
+
+      addons.forEach((addon: Addon) => {
+        if (addon.mc_version == "") {
+          return;
+        }
+
+        if (versions.includes(addon.mc_version)) {
+          return;
+        }
+
+        versions.push(addon.mc_version);
+      });
+
+      let sortedVersions = [...versions].sort((a: string, b: string) => {
+        const aVer = Number(a.replace(".", ""));
+        const bVer = Number(b.replace(".", ""));
+
+        return bVer - aVer;
+      });
+
+      sortedVersions.unshift("All");
+
+      setAllVersions(sortedVersions);
+
       setTotalAddons(addons.length);
       setAddons(addons);
 
@@ -84,7 +102,7 @@ export function App() {
     includeForks,
     includeArchived,
     onlyWithReleases,
-    onlyCurrentMeteorVersion,
+    selectedVersion,
   ]);
 
   function updateVisibleAddons() {
@@ -97,9 +115,7 @@ export function App() {
         ((!includeArchived && !addon.repo.archived) || includeArchived) &&
         ((onlyWithReleases && addon.links.download != "") ||
           !onlyWithReleases) &&
-        ((onlyCurrentMeteorVersion &&
-          addon.mc_version == currentMeteorVersion) ||
-          !onlyCurrentMeteorVersion) &&
+        (selectedVersion == "All" || addon.mc_version == selectedVersion) &&
         (addon.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           addon.authors.some((author) =>
             author.toLowerCase().includes(searchValue.toLowerCase()),
@@ -197,17 +213,10 @@ export function App() {
       if (!a) return 1;
       if (!b) return -1;
 
-      const aParts = a.mc_version.split(".").map(Number);
-      const bParts = b.mc_version.split(".").map(Number);
+      const aVer = Number(a.mc_version.replace(".", ""));
+      const bVer = Number(b.mc_version.replace(".", ""));
 
-      // Compare parts one by one
-      for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-        const aNum = aParts[i] ?? 0;
-        const bNum = bParts[i] ?? 0;
-        if (aNum !== bNum) return bNum - aNum;
-      }
-
-      return 0;
+      return bVer - aVer;
     });
     setAddons(sortedAddons);
   }
@@ -287,15 +296,11 @@ export function App() {
             action={() => setOnlyWithReleases(!onlyWithReleases)}
             active={onlyWithReleases}
           />
-          {currentMeteorVersion && (
-            <Button
-              text={`Only For ${currentMeteorVersion}`}
-              action={() =>
-                setOnlyCurrentMeteorVersion(!onlyCurrentMeteorVersion)
-              }
-              active={onlyCurrentMeteorVersion}
-            />
-          )}
+          <VersionFilterDropdown
+            selectedVersion={selectedVersion}
+            items={allVersions}
+            updateVersion={(version: string) => setSelectedVersion(version)}
+          />
         </section>
         <section class="flex gap-2 w-11/12 max-sm:w-full">
           <SortModeDropdown
