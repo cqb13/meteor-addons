@@ -72,6 +72,16 @@ export function App() {
         }
 
         versions.push(addon.mc_version);
+
+        if (addon.custom.supported_versions) {
+          addon.custom.supported_versions.forEach((version: string) => {
+            if (versions.includes(version)) {
+              return;
+            }
+
+            versions.push(version);
+          });
+        }
       });
 
       let sortedVersions = [...versions].sort((a: string, b: string) => {
@@ -115,7 +125,10 @@ export function App() {
         ((!includeArchived && !addon.repo.archived) || includeArchived) &&
         ((onlyWithReleases && addon.links.download != "") ||
           !onlyWithReleases) &&
-        (selectedVersion == "All" || addon.mc_version == selectedVersion) &&
+        (selectedVersion == "All" ||
+          addon.mc_version == selectedVersion ||
+          (addon.custom.supported_versions &&
+            addon.custom.supported_versions.includes(selectedVersion))) &&
         (addon.name.toLowerCase().includes(searchValue.toLowerCase()) ||
           addon.authors.some((author) =>
             author.toLowerCase().includes(searchValue.toLowerCase()),

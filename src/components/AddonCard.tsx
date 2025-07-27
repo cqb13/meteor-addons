@@ -1,4 +1,5 @@
-import formatAuthors from "../helpers/formatAuthors.ts";
+import pickVersion from "../helpers/pickVersion.ts";
+import formatList from "../helpers/formatList.ts";
 import Download from "./icons/Download.tsx";
 import Archived from "./icons/Archived.tsx";
 import Verified from "./icons/Verified.tsx";
@@ -24,9 +25,9 @@ export default function AddonCard({
           {rank + 1}
         </p>
         <div class="flex gap-2 items-center">
-          {addon.links.icon != "" ? (
+          {addon.custom.icon || addon.links.icon ? (
             <img
-              src={addon.links.icon}
+              src={addon.custom.icon || addon.links.icon}
               alt="icon"
               class="w-16 h-16 rounded select-none"
             />
@@ -41,15 +42,20 @@ export default function AddonCard({
             <p class="font-bold text-lg">{addon.name}</p>
             {addon.authors.length > 0 && (
               <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
-                {formatAuthors(addon.authors)}
+                By {formatList(addon.authors)}
               </p>
             )}
-            {addon.mc_version != "" && <p>For {addon.mc_version}</p>}
+            {(addon.mc_version != "" ||
+              addon.custom.supported_versions != null) && (
+              <p>
+                {pickVersion(addon.mc_version, addon.custom.supported_versions)}
+              </p>
+            )}
           </div>
         </div>
 
         <p class="overflow-hidden text-ellipsis line-clamp-5 [overflow-wrap:anywhere] [word-break:break-word]">
-          {addon.description}
+          {addon.custom.description || addon.description}
         </p>
       </div>
       <div class="flex flex-col gap-1">

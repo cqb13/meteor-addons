@@ -1,4 +1,5 @@
-import formatAuthors from "../helpers/formatAuthors";
+import pickVersion from "../helpers/pickVersion.ts";
+import formatList from "../helpers/formatList.ts";
 import FeatureSection from "./FeatureSection.tsx";
 import Verified from "./icons/Verified.tsx";
 import Archived from "./icons/Archived.tsx";
@@ -44,9 +45,9 @@ export default function AddonModal({
         <div class="w-full">
           <section>
             <div class="flex gap-2">
-              {addon.links.icon != "" ? (
+              {addon.custom.icon || addon.links.icon ? (
                 <img
-                  src={addon.links.icon}
+                  src={addon.custom.icon || addon.links.icon}
                   alt="icon"
                   class="w-20 h-2k rounded select-none"
                 />
@@ -61,10 +62,20 @@ export default function AddonModal({
                 <h2 className="text-2xl font-bold font-purple-300">
                   {addon.name}
                 </h2>
-                <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
-                  {formatAuthors(addon.authors)}
-                </p>
-                {addon.mc_version != "" && <p>For {addon.mc_version}</p>}
+                {addon.authors.length != 0 && (
+                  <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
+                    By {formatList(addon.authors)}
+                  </p>
+                )}
+                {(addon.mc_version != "" ||
+                  addon.custom.supported_versions != null) && (
+                  <p>
+                    {pickVersion(
+                      addon.mc_version,
+                      addon.custom.supported_versions,
+                    )}
+                  </p>
+                )}
               </div>
             </div>
             <div class="flex justify-between items-center py-2">
@@ -90,7 +101,7 @@ export default function AddonModal({
               </div>
             </div>
             <p class="text-wrap break-words [word-break:break-word]">
-              {addon.description}
+              {addon.custom.description || addon.description}
             </p>
           </section>
           {addon.features && <FeatureSection features={addon.features} />}
@@ -112,8 +123,11 @@ export default function AddonModal({
               </svg>
             </a>
           )}
-          {addon.links.discord != "" && (
-            <a href={addon.links.discord} target="_blank">
+          {(addon.custom.discord || addon.links.discord) && (
+            <a
+              href={addon.custom.discord || addon.links.discord}
+              target="_blank"
+            >
               <svg
                 width="800"
                 height="800"
@@ -125,8 +139,11 @@ export default function AddonModal({
               </svg>
             </a>
           )}
-          {addon.links.homepage != "" && (
-            <a href={addon.links.homepage} target="_blank">
+          {(addon.custom.homepage || addon.links.homepage) && (
+            <a
+              href={addon.custom.homepage || addon.links.homepage}
+              target="_blank"
+            >
               <svg
                 width="800"
                 height="800"
