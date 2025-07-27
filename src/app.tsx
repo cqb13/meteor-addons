@@ -56,6 +56,20 @@ export function App() {
   );
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const addonParam = params.get("addon");
+    if (addonParam && addons.length > 0) {
+      const [owner, repo] = addonParam.split("/");
+      const match = addons.find(
+        (a) => a.repo.owner === owner && a.repo.name === repo,
+      );
+      if (match) {
+        openAddonModal(match);
+      }
+    }
+  }, [addons]);
+
+  useEffect(() => {
     (async () => {
       let addons = await loadAddons();
       addons.sort((a: Addon, b: Addon) => b.repo.stars - a.repo.stars);
@@ -243,12 +257,18 @@ export function App() {
     disableScrolling();
     setCurrentViewedAddon(addon);
     setAddonModal(true);
+    const url = new URL(window.location.href);
+    url.searchParams.set("addon", `${addon.repo.owner}/${addon.repo.name}`);
+    window.history.pushState({}, document.title, url);
   }
 
   function closeAddonModal() {
     enableScrolling();
     setAddonModal(false);
     setCurrentViewedAddon(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("addon");
+    window.history.replaceState({}, document.title, url.pathname + url.search);
   }
 
   function disableScrolling() {
