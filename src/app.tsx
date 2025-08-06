@@ -1,5 +1,6 @@
 import VersionFilterDropdown from "./components/VersionFilterDropdown.tsx";
 import getDaysSinceUpdatedAddons from "./helpers/getDaysSinceUpdate.ts";
+import Features from "./components/icons/Features.tsx";
 import SortModeDropdown from "./components/SortModeDropdown.tsx";
 import AddonModal from "./components/AddonModal.tsx";
 import { useState, useEffect } from "preact/hooks";
@@ -42,6 +43,7 @@ export function App() {
 
   // filters
   const [searchValue, setSearchValue] = useState<string>("");
+  const [featureSearch, setFeatureSearch] = useState<boolean>(false);
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(true);
   const [includeArchived, setIncludeArchived] = useState<boolean>(false);
   const [includeForks, setIncludeForks] = useState<boolean>(false);
@@ -122,6 +124,7 @@ export function App() {
   }, [
     addons,
     verifiedOnly,
+    featureSearch,
     searchValue,
     includeForks,
     includeArchived,
@@ -130,28 +133,75 @@ export function App() {
   ]);
 
   function updateVisibleAddons() {
-    let visible: Addon[] = [];
+    const visible: Addon[] = [];
 
     addons.forEach((addon: Addon) => {
-      if (
-        ((verifiedOnly && addon.verified) || !verifiedOnly) &&
-        ((!includeForks && !addon.repo.fork) || includeForks) &&
-        ((!includeArchived && !addon.repo.archived) || includeArchived) &&
-        ((onlyWithReleases && addon.links.download != "") ||
-          !onlyWithReleases) &&
-        (selectedVersion == "All" ||
-          addon.mc_version == selectedVersion ||
-          (addon.custom.supported_versions &&
-            addon.custom.supported_versions.includes(selectedVersion))) &&
-        (addon.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+      const passesVerifiedCheck = !verifiedOnly || addon.verified;
+      const passesForkCheck = includeForks || !addon.repo.fork;
+      const passesArchivedCheck = includeArchived || !addon.repo.archived;
+      const passesReleaseCheck =
+        !onlyWithReleases || addon.links.download !== "";
+      const passesVersionCheck =
+        selectedVersion === "All" ||
+        addon.mc_version === selectedVersion ||
+        addon.custom.supported_versions?.includes(selectedVersion);
+
+      const lowerSearch = searchValue.toLowerCase();
+
+      const passesSearchCheck = featureSearch
+        ? (() => {
+            if (!addon.features) return false;
+
+            const features = addon.features;
+            if (lowerSearch.startsWith("hud:") && features.hud_elements) {
+              const query = lowerSearch.slice(4);
+              return features.hud_elements.some((e) =>
+                e.toLowerCase().includes(query),
+              );
+            } else if (lowerSearch.startsWith("module:") && features.modules) {
+              const query = lowerSearch.slice(7);
+              return features.modules.some((e) =>
+                e.toLowerCase().includes(query),
+              );
+            } else if (
+              lowerSearch.startsWith("command:") &&
+              features.commands
+            ) {
+              const query = lowerSearch.slice(8);
+              return features.commands.some((e) =>
+                e.toLowerCase().includes(query),
+              );
+            } else {
+              return (
+                features.modules?.some((e) =>
+                  e.toLowerCase().includes(searchValue),
+                ) ||
+                features.commands?.some((e) =>
+                  e.toLowerCase().includes(searchValue),
+                ) ||
+                features.hud_elements?.some((e) =>
+                  e.toLowerCase().includes(searchValue),
+                )
+              );
+            }
+          })()
+        : addon.name.toLowerCase().includes(lowerSearch) ||
           addon.authors.some((author) =>
-            author.toLowerCase().includes(searchValue.toLowerCase()),
+            author.toLowerCase().includes(lowerSearch),
           ) ||
-          addon.repo.owner.toLowerCase().includes(searchValue.toLowerCase()))
+          addon.repo.owner.toLowerCase().includes(lowerSearch);
+      if (
+        passesVerifiedCheck &&
+        passesForkCheck &&
+        passesArchivedCheck &&
+        passesReleaseCheck &&
+        passesVersionCheck &&
+        passesSearchCheck
       ) {
         visible.push(addon);
       }
     });
+
     setVisibleAddons(visible);
   }
 
@@ -279,6 +329,11 @@ export function App() {
     document.body.style.overflow = "unset";
   }
 
+  function toggleFeatureSearch() {
+    setSearchValue("");
+    setFeatureSearch(!featureSearch);
+  }
+
   return (
     <>
       <div class="fixed top-5 right-5">
@@ -304,14 +359,24 @@ export function App() {
         )}
       </header>
       <main class="flex flex-col gap-2 items-center px-5 flex-grow">
-        <section class="w-11/12 max-sm:w-full">
+        <section class="w-11/12 max-sm:w-full relative">
           <input
             type="text"
-            placeholder="search here..."
+            placeholder={
+              featureSearch ? "search features here..." : "search here..."
+            }
             onInput={searchAddons}
             value={searchValue}
             class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
           />
+          <button
+            class="block absolute top-2 right-2 cursor-pounter"
+            onClick={toggleFeatureSearch}
+          >
+            <Features
+              style={`w-7 h-7 cursor-pointer ${featureSearch ? "stroke-purple-400" : null}`}
+            />
+          </button>
         </section>
         <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">
           <Button
