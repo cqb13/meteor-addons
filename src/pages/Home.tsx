@@ -1,15 +1,14 @@
 import VersionFilterDropdown from "../components/VersionFilterDropdown.tsx";
-import getDaysSinceUpdatedAddons from "../helpers/getDaysSinceUpdate.ts";
-import Features from "../components/icons/Features.tsx";
 import SortModeDropdown from "../components/SortModeDropdown.tsx";
+import Features from "../components/icons/Features.tsx";
 import AddonModal from "../components/AddonModal.tsx";
 import { useState, useEffect } from "preact/hooks";
+import type { RoutableProps } from "preact-router";
+import type { FunctionalComponent } from "preact";
 import loadAddons from "../helpers/addonLoader";
 import AddonCard from "../components/AddonCard";
-import Button from "../components/Button";
 import type Addon from "../helpers/addon";
-import type { FunctionalComponent } from "preact";
-import type { RoutableProps } from "preact-router";
+import Button from "../components/Button";
 
 export enum SortMode {
   Stars,
@@ -38,7 +37,6 @@ export function sortModeToString(sortMode: SortMode): string {
 }
 
 const Home: FunctionalComponent<RoutableProps> = () => {
-  const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [addons, setAddons] = useState<Addon[]>([]);
   const [visibleAddons, setVisibleAddons] = useState<Addon[]>([]);
   const [totalAddons, setTotalAddons] = useState<number>(0);
@@ -116,9 +114,6 @@ const Home: FunctionalComponent<RoutableProps> = () => {
 
       setTotalAddons(addons.length);
       setAddons(addons);
-
-      let daysSince = await getDaysSinceUpdatedAddons();
-      setLastUpdate(daysSince);
     })();
   }, []);
 
@@ -339,15 +334,6 @@ const Home: FunctionalComponent<RoutableProps> = () => {
 
   return (
     <>
-      <header class="p-5 text-7xl font-bold">
-        <h1 class="text-center">Meteor Addons</h1>
-        <p class="text-center text-sm text-slate-400">
-          A list of free and open-source Meteor Client addons
-        </p>
-        {lastUpdate && (
-          <p class="text-center text-xs text-slate-400">{lastUpdate}</p>
-        )}
-      </header>
       <main class="flex flex-col gap-2 items-center px-5 flex-grow">
         <section class="w-11/12 max-sm:w-full relative">
           <input
@@ -444,22 +430,6 @@ const Home: FunctionalComponent<RoutableProps> = () => {
           ))}
         </section>
       </main>
-      <footer class="text-sm p-4 w-full flex justify-between">
-        <a
-          href="https://github.com/cqb13/meteor-addons/blob/main/LICENSE"
-          class="hover:text-purple-400 transition-all duration-300 ease-in-out"
-          target="_blank"
-        >
-          copyright © 2025
-        </a>
-        <a
-          href="https://github.com/cqb13"
-          class="hover:text-purple-400 transition-all duration-300 ease-in-out"
-          target="_blank"
-        >
-          Created by: cqb13
-        </a>
-      </footer>
       {addonModal && (
         <AddonModal
           addon={currentViewedAddon}
