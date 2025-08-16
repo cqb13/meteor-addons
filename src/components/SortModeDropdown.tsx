@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SortMode, sortModeToString } from "../app";
+import { SortMode, sortModeToString } from "../pages/Home";
 
 export default function Dropdown({
   items,
