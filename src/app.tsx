@@ -1,6 +1,7 @@
 import getDaysSinceUpdatedAddons from "./helpers/getDaysSinceUpdate.ts";
 import { useState, useEffect } from "preact/hooks";
 import NavLink from "./components/NavLink.tsx";
+import About from "./pages/About.tsx";
 import Home from "./pages/Home.tsx";
 import Router from "preact-router";
 
@@ -43,6 +44,7 @@ export function App() {
       </header>
       <Router>
         <Home path="/" />
+        <About path="/about" />
       </Router>
       <footer class="text-sm p-4 w-full flex justify-between">
         <a
