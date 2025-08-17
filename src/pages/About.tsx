@@ -26,12 +26,32 @@ function Tag({ tag }: { tag: string }) {
 
 const About: FunctionalComponent<RoutableProps> = () => {
   return (
-    <main class="flex flex-col gap-2 items-center px-5 flex-grow">
+    <main class="flex flex-col gap-5 items-center px-5 flex-grow">
       <section class="w-3/5">
         <h2 class="font-medium text-4xl pb-2">About</h2>
-        <article>
-          <h3 class="text-xl">How Addons Are Scrapped</h3>
-          <p></p>
+        <article class="flex flex-col gap-2">
+          <h3 class="text-xl">What Is It</h3>
+          <article class="text-slate-400 flex flex-col gap-2">
+            <p>
+              Meteor Addon List is a collection of addons for the Meteor Client,
+              automatically scraped from GitHub. It’s designed to make
+              discovering, and downloading addons as seamless as possible.
+            </p>
+          </article>
+          <h3 class="text-xl">Why This Site Exists</h3>
+          <article class="text-slate-400 flex flex-col gap-2">
+            <p>
+              This project was heavily inspired by AntiCope. While it was a
+              great resource, it lacked advanced filtering, search
+              functionality, and regular updates. Meteor Addon List is built to
+              fix those issues.
+            </p>
+          </article>
+          <h3 class="text-xl">Key Features</h3>
+          <h3 class="text-xl">How Addons Are Scraped</h3>
+          <article class="text-slate-400 flex flex-col gap-2">
+            <p></p>
+          </article>
         </article>
       </section>
       <section class="w-3/5">
@@ -130,8 +150,8 @@ const About: FunctionalComponent<RoutableProps> = () => {
           </article>
         </article>
       </section>
-      <section>
-        <h2>FAQ</h2>
+      <section class="w-3/5">
+        <h2 class="font-medium text-4xl pb-2">FAQ</h2>
         <article></article>
       </section>
     </main>
