@@ -28,7 +28,7 @@ function Tag({ tag }: { tag: string }) {
 const About: FunctionalComponent<RoutableProps> = () => {
   return (
     <main class="flex flex-col gap-5 items-center px-5 flex-grow">
-      <section class="w-3/5">
+      <section class="w-3/5 max-lg:w-4/5 max-md:w-full">
         <h2 class="font-medium text-4xl pb-2">About</h2>
         <article class="flex flex-col gap-2">
           <h3 class="text-xl">What Is It</h3>
@@ -78,7 +78,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
           </article>
         </article>
       </section>
-      <section class="w-3/5">
+      <section class="w-3/5 max-lg:w-4/5 max-md:w-full">
         <h2 class="font-medium text-4xl pb-2">Developer Info</h2>
         <article>
           <h3 class="text-xl">How to Verify Your Addon</h3>
@@ -148,7 +148,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
               to overide.
             </p>
             <section className="ml-5 p-5 bg-slate-950 border border-purple-300/20 rounded">
-              <pre className="font-mono text-purple-200 whitespace-pre">
+              <pre className="font-mono text-purple-200 whitespace-pre max-sm:whitespace-pre-wrap break-words">
                 {JSON.stringify(
                   {
                     description: "A short description of your addon.",
@@ -174,7 +174,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
           </article>
         </article>
       </section>
-      <section class="w-3/5">
+      <section class="w-3/5 max-lg:w-4/5 max-md:w-full">
         <h2 class="font-medium text-4xl pb-2">FAQ</h2>
         <article class="flex flex-col gap-2">
           <FaqCard
@@ -183,7 +183,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
           />
           <FaqCard
             question="Are all addons safe to use?"
-            answer="Verified addons go through a review process to ensure they’re functional and free of harmful features. Unverified addons are collected automatically and might not be safe."
+            answer="No. Verified addons go through a review process to ensure they’re functional and free of harmful features. However unverified addons are collected automatically and might not be safe. Always check an addons code before running it to ensure it is safe."
           />
           <FaqCard
             question="Why is my addon not listed?"
