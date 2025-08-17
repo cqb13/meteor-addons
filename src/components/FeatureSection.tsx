@@ -7,7 +7,7 @@ export default function FeatureSection({ features }: { features: Features }) {
         <h3 className="text-purple-300 font-bold text-xl">Features</h3>
       </div>
 
-      <div className="overflow-y-auto max-h-[60vh] pr-2">
+      <div className="overflow-y-auto max-h-[60vh] pr-2 max-sm:max-h-[50vh]">
         {features.modules && (
           <div>
             <h4 className="font-bold text-purple-300">
