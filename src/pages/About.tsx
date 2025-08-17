@@ -1,5 +1,6 @@
-import type { FunctionalComponent } from "preact";
 import type { RoutableProps } from "preact-router";
+import type { FunctionalComponent } from "preact";
+import FaqCard from "../components/FaqCard";
 
 const supportedTags: string[] = [
   "PvP",
@@ -175,7 +176,24 @@ const About: FunctionalComponent<RoutableProps> = () => {
       </section>
       <section class="w-3/5">
         <h2 class="font-medium text-4xl pb-2">FAQ</h2>
-        <article></article>
+        <article class="flex flex-col gap-2">
+          <FaqCard
+            question="Is this site official?"
+            answer="No. Meteor Addon List is an independent project and is not affiliated with, sponsored by, or officially endorsed by the Meteor Client team."
+          />
+          <FaqCard
+            question="Are all addons safe to use?"
+            answer="Verified addons go through a review process to ensure they’re functional and free of harmful features. Unverified addons are collected automatically and might not be safe."
+          />
+          <FaqCard
+            question="Why is my addon not listed?"
+            answer="Your repository might not be on GitHub, match the search criteria, or it may be private. Make sure it is on GitHub, is public, and includes the necessary files."
+          />
+          <FaqCard
+            question="Why are my addons features missing?"
+            answer="Features are detected by looking at the addons entrypoint file where all the modules are added. If you are adding modules outside of that file, or are using a custom function to add modules, they will not be detected."
+          />
+        </article>
       </section>
     </main>
   );
