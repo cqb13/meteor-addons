@@ -48,9 +48,32 @@ const About: FunctionalComponent<RoutableProps> = () => {
             </p>
           </article>
           <h3 class="text-xl">Key Features</h3>
+          <ul class="pl-5 list-disc text-slate-400">
+            <li>Search: Quickly find addons or authors by name.</li>
+            <li>
+              Filtering: Sort and filter by Minecraft version, GitHub stars,
+              downloads, features, and more.
+            </li>
+            <li>
+              Frequent Updates: The list is updated daily to keep up with new
+              and changing addons.
+            </li>
+          </ul>
           <h3 class="text-xl">How Addons Are Scraped</h3>
           <article class="text-slate-400 flex flex-col gap-2">
-            <p></p>
+            <p>
+              All addons on Meteor Addon List are automatically gathered from
+              GitHub using the{" "}
+              <a
+                href="https://github.com/cqb13/meteor-addon-scanner"
+                target="_blank"
+                class="text-purple-300 font-medium cursor-pointer hover:text-purple-400 transition-all ease-in-out duration-300"
+              >
+                Meteor Addon Scanner
+              </a>
+              . It searches for projects that use Meteor-specific files or code
+              and also looks for forks of the official addon template.
+            </p>
           </article>
         </article>
       </section>
