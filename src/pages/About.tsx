@@ -1,6 +1,29 @@
 import type { FunctionalComponent } from "preact";
 import type { RoutableProps } from "preact-router";
 
+const supportedTags: string[] = [
+  "PvP",
+  "Utility",
+  "Theme",
+  "Render",
+  "Movement",
+  "Building",
+  "World",
+  "Misc",
+  "QoL",
+  "Exploit",
+  "Fun",
+  "Automation",
+];
+
+function Tag({ tag }: { tag: string }) {
+  return (
+    <div class="px-2 text-center rounded bg-slate-950/50 border border-purple-300/20 min-w-2/12 block">
+      {tag}
+    </div>
+  );
+}
+
 const About: FunctionalComponent<RoutableProps> = () => {
   return (
     <main class="flex flex-col gap-2 items-center px-5 flex-grow">
@@ -74,13 +97,13 @@ const About: FunctionalComponent<RoutableProps> = () => {
             </p>
             <p>
               To do that, create the file{" "}
-              <p class="px-1 bg-slate-950/50 rounded inline font-medium">
+              <p class="px-1 bg-slate-950/50 rounded inline font-medium outline outline-purple-300/20">
                 meteor-addon-list.json
               </p>{" "}
               in the root directory of your addon, and add the fields you wish
               to overide.
             </p>
-            <section className="ml-5 p-5 bg-slate-950 border border-purple-300 rounded">
+            <section className="ml-5 p-5 bg-slate-950 border border-purple-300/20 rounded">
               <pre className="font-mono text-purple-200 whitespace-pre">
                 {JSON.stringify(
                   {
@@ -96,8 +119,14 @@ const About: FunctionalComponent<RoutableProps> = () => {
                 )}
               </pre>
             </section>
-            <h4 class="text-purple-300 text-lg">Supported Tags</h4>
-            <div></div>
+            <article class="pl-5 flex flex-col gap-2">
+              <h4 class="text-purple-300 text-lg">Supported Tags</h4>
+              <div class="flex flex-wrap gap-2 items-center justify-center">
+                {supportedTags.map((t) => (
+                  <Tag tag={t} />
+                ))}
+              </div>
+            </article>
           </article>
         </article>
       </section>

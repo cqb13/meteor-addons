@@ -13,7 +13,7 @@ export default function NavLink({
         return (
           <a
             href={path}
-            class={`font-medium px-2 hover:outline rounded transition-all ease-in-out duration-300 ${matches ? "text-purple-400 hover:outline-purpple-400" : "hover:outline-purple-300"}`}
+            class={`bg-slate-950/50 px-2 text-center rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-full ${matches ? "border-purple-300/80" : null}`}
           >
             {name}
           </a>
