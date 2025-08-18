@@ -42,7 +42,21 @@ export default function AddonModal({
         className="z-20 bg-slate-900 border border-purple-300/20 rounded w-3/4 h-11/12 flex flex-col justify-between items-center p-5 text-slate-400 max-sm:w-11/12"
         onClick={(e) => e.stopPropagation()}
       >
-        <div class="w-full">
+        <div class="w-full relative">
+          <button
+            class="absolute top-0.5 right-2 cursor-pointer"
+            onClick={closeAddonModal}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="800"
+              height="800"
+              viewBox="0 0 100 100"
+              class="w-7 h-7 fill-purple-300 hover:fill-purple-400 duration-300 transition-all ease-in-out"
+            >
+              <path d="M88.447 38.528H11.554a2.024 2.024 0 0 0-2.024 2.024v18.896c0 1.118.907 2.024 2.024 2.024h76.892a2.024 2.024 0 0 0 2.023-2.024V40.552a2.023 2.023 0 0 0-2.022-2.024" />
+            </svg>
+          </button>
           <section>
             <div class="flex gap-2">
               {addon.custom.icon || addon.links.icon ? (
