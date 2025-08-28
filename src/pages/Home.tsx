@@ -172,13 +172,13 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             } else {
               return (
                 features.modules?.some((e) =>
-                  e.toLowerCase().includes(searchValue),
+                  e.toLowerCase().includes(lowerSearch),
                 ) ||
                 features.commands?.some((e) =>
-                  e.toLowerCase().includes(searchValue),
+                  e.toLowerCase().includes(lowerSearch),
                 ) ||
                 features.hud_elements?.some((e) =>
-                  e.toLowerCase().includes(searchValue),
+                  e.toLowerCase().includes(lowerSearch),
                 )
               );
             }
@@ -187,6 +187,8 @@ const Home: FunctionalComponent<RoutableProps> = () => {
           addon.authors.some((author) =>
             author.toLowerCase().includes(lowerSearch),
           ) ||
+          (addon.custom.tags != null &&
+            addon.custom.tags.includes(lowerSearch)) ||
           addon.repo.owner.toLowerCase().includes(lowerSearch);
       if (
         passesVerifiedCheck &&
