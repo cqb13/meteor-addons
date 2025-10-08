@@ -107,21 +107,18 @@ const About: FunctionalComponent<RoutableProps> = () => {
                 What Will Prevent Verification
               </h4>
               <ul class="pl-5 list-disc">
-                <li>Harmful features (e.g. backdoors, coordinate leaks)</li>
-                <li>Obfuscated/unreadable code</li>
-                <li>Broken or non-functional addons</li>
-              </ul>
-              <h4 class="text-purple-300 text-lg">
-                Addons That Will Not Be Verified
-              </h4>
-              <ul class="pl-5 list-disc">
-                <li>Forks that do not meaningfully expand on the original</li>
                 <li>
-                  Forks of actively maintained addons (commits within 6 months)
+                  Harmful or malicious features (e.g., backdoors, coordinate
+                  leaks, remote control)
+                </li>
+                <li>Obfuscated, unreadable, or intentionally confusing code</li>
+                <li>
+                  Forks of addons that are still actively maintained (commits
+                  within the past 6 months)
                 </li>
                 <li>
-                  Addons that take code from other addons without properly
-                  crediting original authors
+                  Addons that copy modules from other addons without proper
+                  credit and meaningful changes
                 </li>
               </ul>
             </article>
@@ -132,6 +129,67 @@ const About: FunctionalComponent<RoutableProps> = () => {
             <p class="itlaic">
               Please only submit addons that you have created.
             </p>
+          </article>
+          <h3 class="text-xl">Verified Addon Requirements</h3>
+          <article class="text-slate-400 flex flex-col gap-2">
+            <p>
+              Once verified, your addon must continue to meet the following
+              requirements to remain verified:
+            </p>
+            <ul class="pl-5 list-disc">
+              <li>
+                Code must remain open-source and free of obfuscated, unreadable,
+                or intentionally confusing code
+              </li>
+              <li>
+                No hidden, deceptive, or user-targeting code. This includes code
+                that:{" "}
+              </li>
+              <ul class="pl-5 list-disc">
+                <li>Disconnects, kicks, or otherwise disrupts the users</li>
+                <li>
+                  Gives a user remote control over another user's client or
+                  actions
+                </li>
+                <li>
+                  Collects or sends private data (e.g, coordinates, IPs,
+                  messages) without clear consent
+                </li>
+                <li>
+                  Cosmetic features (e.g., user-specific capes or badges) are
+                  allowed, as long as they are purely visual and do not affect
+                  gameplay or performance
+                </li>
+              </ul>
+              <li>
+                Addons should not cause severe performance issues or crashes
+              </li>
+              <li>
+                Addons should be maintained to remain compatible with current
+                Meteor Client and Minecraft versions.
+              </li>
+            </ul>
+            <h4 class="text-lg text-purple-300 pl-5">
+              Policy Violations & Consequences
+            </h4>
+            <article class="pl-5">
+              <ul class="pl-5 list-disc">
+                <li>
+                  First Offense: The addon will be unverified until changes are
+                  made to comply with policies. If there is a clear way to
+                  contact the developer (discord username), the developer will
+                  be informed of the issues and given a chance to fix them.
+                </li>
+                <li>
+                  Second Offense: The addon will be permanently unverified and
+                  will not be eligible for re-verification in the future.
+                </li>
+                <li class="italic">
+                  Developers may appeal a verification decision by contacting
+                  cqb13 on discord.
+                </li>
+              </ul>
+            </article>
           </article>
           <h3 class="text-xl">Custom Data</h3>
           <article class="text-slate-400 flex flex-col gap-2">
