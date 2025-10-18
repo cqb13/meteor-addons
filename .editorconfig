@@ -1,0 +1,14 @@
+# top-most EditorConfig file
+root = true
+
+# Generic settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Settings for JavaScript, TypeScript, JSX, and TSX files
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 2

@@ -53,7 +53,18 @@ export default function AddonCard({
             )}
           </div>
         </div>
-
+        {addon.custom.tags && (
+          <div class="flex gap-1 flex-wrap text-xs my-1">
+            {addon.custom.tags?.map((tag: string, key: number) => (
+              <p
+                key={key}
+                class="text-center rounded bg-slate-950/50 border border-purple-300/20 block min-w-2/12 px-1"
+              >
+                {tag}
+              </p>
+            ))}
+          </div>
+        )}
         <p class="overflow-hidden text-ellipsis line-clamp-5 [overflow-wrap:anywhere] [word-break:break-word]">
           {addon.custom.description || addon.description}
         </p>
