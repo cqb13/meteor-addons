@@ -102,10 +102,15 @@ const Home: FunctionalComponent<RoutableProps> = () => {
       });
 
       let sortedVersions = [...versions].sort((a: string, b: string) => {
-        const aVer = Number(a.replace(".", ""));
-        const bVer = Number(b.replace(".", ""));
+        const aParts = a.split(".").map(Number);
+        const bParts = b.split(".").map(Number);
 
-        return bVer - aVer;
+        for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+          const diff = (bParts[i] || 0) - (aParts[i] || 0);
+          if (diff !== 0) return diff;
+        }
+
+        return 0;
       });
 
       sortedVersions.unshift("All");
