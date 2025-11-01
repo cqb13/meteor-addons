@@ -440,6 +440,8 @@ const Home: FunctionalComponent<RoutableProps> = () => {
       {addonModal && (
         <AddonModal
           addon={currentViewedAddon}
+          featureSearch={featureSearch}
+          searchValue={searchValue}
           closeAddonModal={closeAddonModal}
         />
       )}

@@ -13,9 +13,13 @@ import { useEffect } from "react";
 
 export default function AddonModal({
   addon,
+  featureSearch,
+  searchValue,
   closeAddonModal,
 }: {
   addon: Addon | null;
+  featureSearch: boolean;
+  searchValue: String;
   closeAddonModal: () => void;
 }) {
   useEffect(() => {
@@ -118,7 +122,13 @@ export default function AddonModal({
               {addon.custom.description || addon.description}
             </p>
           </section>
-          {addon.features && <FeatureSection features={addon.features} />}
+          {addon.features && (
+            <FeatureSection
+              features={addon.features}
+              featureSearch={featureSearch}
+              searchValue={searchValue}
+            />
+          )}
         </div>
         <section class="flex items-center justify-center gap-2 w-1/2 max-md:w-3/4 max-sm:w-full pt-2">
           {addon.links.download != "" && (
