@@ -350,6 +350,21 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             value={searchValue}
             class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
           />
+          <Dropdown
+            label={`Sort By ${sortModeToString(sortMode)}`}
+            selected={sortMode}
+            items={[
+              SortMode.Stars,
+              SortMode.Downloads,
+              SortMode.Features,
+              SortMode.Age,
+              SortMode.LastUpdate,
+              SortMode.McVersion,
+            ]}
+            renderItem={(item) => sortModeToString(item)}
+            onSelect={(mode: SortMode) => sortAddons(mode)}
+            className="w-1/4 max-lg:w-1/2 max-md:w-full"
+          />
         </section>
         <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">
           <Button
@@ -367,12 +382,10 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             action={() => setOnlyWithReleases(!onlyWithReleases)}
             active={onlyWithReleases}
           />
-          <Dropdown
-            label={`For ${selectedVersion}`}
+          <VersionFilterDropdown
             selected={selectedVersion}
             items={allVersions}
-            onSelect={(version: string) => setSelectedVersion(version)}
-            className="w-full"
+            updateVersion={(version: string) => setSelectedVersion(version)}
           />
         </section>
         <section class="flex gap-2 w-11/12 max-sm:w-full">
