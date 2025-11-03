@@ -36,7 +36,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
             <p>
               Meteor Addon List is a collection of addons for the Meteor Client,
               automatically scraped from GitHub. It’s designed to make
-              discovering, and downloading addons as seamless as possible.
+              discovering and downloading addons as seamless as possible.
             </p>
           </article>
           <h3 class="text-xl">Why This Site Exists</h3>
