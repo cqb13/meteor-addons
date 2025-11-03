@@ -191,7 +191,9 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             author.toLowerCase().includes(lowerSearch),
           ) ||
           (addon.custom.tags != null &&
-            addon.custom.tags.includes(lowerSearch)) ||
+            addon.custom.tags.some((tag) =>
+              tag.toLowerCase().includes(lowerSearch),
+            )) ||
           addon.repo.owner.toLowerCase().includes(lowerSearch);
       if (
         passesVerifiedCheck &&
@@ -344,11 +346,19 @@ const Home: FunctionalComponent<RoutableProps> = () => {
           <input
             type="text"
             placeholder={
-              featureSearch ? "search features here..." : "search here..."
+              featureSearch
+                ? "search features — try hud:, module:, or command:"
+                : "search addons, authors, and tags"
             }
             onInput={searchAddons}
             value={searchValue}
             class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
+          />
+          <Button
+            text={` ${featureSearch ? "Addons" : "Features"}`}
+            action={toggleFeatureSearch}
+            active={false}
+            className="!w-1/4"
           />
         </section>
         <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">
