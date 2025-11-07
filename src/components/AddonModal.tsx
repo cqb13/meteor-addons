@@ -121,6 +121,12 @@ export default function AddonModal({
             <p class="text-wrap break-words [word-break:break-word]">
               {addon.custom.description || addon.description}
             </p>
+            <div>
+              <p class="text-slate-600">
+                Last Update:{" "}
+                {new Date(addon.repo.last_update).toLocaleDateString()}
+              </p>
+            </div>
           </section>
           {addon.features && (
             <FeatureSection
