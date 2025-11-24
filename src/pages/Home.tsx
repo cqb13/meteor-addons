@@ -288,19 +288,37 @@ const Home: FunctionalComponent<RoutableProps> = () => {
   }
 
   function sortAddonsByMinecraftVersion() {
-    if (sortMode == SortMode.McVersion) return;
+    if (sortMode === SortMode.McVersion) return;
     setSortMode(SortMode.McVersion);
-    const sortedAddons = [...addons].sort((a: Addon, b: Addon) => {
-      // Empty strings go last
-      if (!a) return 1;
-      if (!b) return -1;
 
-      const aVer = Number(a.mc_version.replace(".", ""));
-      const bVer = Number(b.mc_version.replace(".", ""));
+    const parseVersion = (v: string) => v?.match(/\d+/g)?.map(Number) ?? [];
 
-      return bVer - aVer;
-    });
-    setAddons(sortedAddons);
+    const getVersions = (addon: Addon): string[] => {
+      const sv = addon.custom?.supported_versions;
+      if (sv && sv.length > 0) return sv;
+      return addon.mc_version ? [addon.mc_version] : [];
+    };
+
+    const getBestVersion = (addon: Addon): number[] => {
+      const parsed = getVersions(addon).map(parseVersion);
+      parsed.sort((a, b) => compareParsedVersions(b, a));
+      return parsed[0] ?? [];
+    };
+
+    const compareParsedVersions = (a: number[], b: number[]) => {
+      const len = Math.max(a.length, b.length);
+      for (let i = 0; i < len; i++) {
+        const diff = (a[i] ?? 0) - (b[i] ?? 0);
+        if (diff !== 0) return diff;
+      }
+      return 0;
+    };
+
+    const sorted = [...addons].sort((a, b) =>
+      compareParsedVersions(getBestVersion(b), getBestVersion(a)),
+    );
+
+    setAddons(sorted);
   }
 
   function reverseAddonList() {
