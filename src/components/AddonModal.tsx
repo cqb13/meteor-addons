@@ -137,15 +137,19 @@ export default function AddonModal({
           )}
         </div>
         <section class="flex items-center justify-center gap-2 w-1/2 max-md:w-3/4 max-sm:w-full pt-2">
-          {addon.links.download != "" && (
-            <LinkButton destination={addon.links.download} text="Download" className="w-1/2" />
-          )}
-          {addon.links.github != "" && (
-            <LinkButton
-              destination={`https://github.com/${addon.repo.owner}/${addon.repo.name}/releases/latest`}
-              text="Latest Release"
-              className="w-1/2"
-            />
+        {addon.links.download !== "" && (
+            <>
+              <LinkButton
+                destination={addon.links.download}
+                text="Download"
+                className="w-1/2"
+              />
+              <LinkButton
+                destination={`https://github.com/${addon.repo.owner}/${addon.repo.name}/releases/latest`}
+                text="Latest Release"
+                className="w-1/2"
+              />
+            </>
           )}
           {addon.links.github != "" && (
             <a href={addon.links.github} target="_blank">
