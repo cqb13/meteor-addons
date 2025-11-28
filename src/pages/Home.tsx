@@ -360,7 +360,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
   return (
     <>
       <main class="flex flex-col gap-2 items-center px-5 flex-grow">
-        <section class="flex gap-2 w-11/12 max-sm:w-full relative">
+        <section class="flex gap-2 w-full relative">
           <input
             type="text"
             placeholder={
@@ -379,7 +379,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             className="!w-1/4"
           />
         </section>
-        <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">
+        <section class="flex gap-2 w-full max-md:flex-wrap">
           <Button
             text="Include Forks"
             action={() => setIncludeForks(!includeForks)}
@@ -403,7 +403,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             className="w-full"
           />
         </section>
-        <section class="flex gap-2 w-11/12 max-sm:w-full">
+        <section class="flex gap-2 w-full">
           <Dropdown
             label={`Sort By ${sortModeToString(sortMode)}`}
             selected={sortMode}
@@ -435,7 +435,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             <p class="whitespace-nowrap">Reverse List</p>
           </button>
         </section>
-        <section class="flex justify-between w-11/12 max-sm:w-full">
+        <section class="flex justify-between w-full">
           <div class="flex gap-1 justify-center items-center select-none">
             <div
               class={`w-5 h-5 rounded cursor-pounter border border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out cursor-pointer ${verifiedOnly ? "bg-purple-400/80" : "bg-slate-950/50"}`}

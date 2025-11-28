@@ -19,7 +19,7 @@ export default function AddonCard({
   openAddonModal: (addon: Addon) => void;
 }) {
   return (
-    <div class="w-1/4 max-xl:w-5/12 max-md:w-3/4 max-sm:w-full h-80 border border-purple-300/20 rounded p-2 bg-slate-950/50 text-slate-400 flex flex-col justify-between relative">
+    <div class="flex-1 min-w-[300px] max-xl:min-w-[280px] max-lg:min-w-[400px] max-md:flex-none max-md:w-3/4 max-sm:w-full h-80 border border-purple-300/20 rounded p-2 bg-slate-950/50 text-slate-400 flex flex-col justify-between relative">
       <div>
         <p class="absolute top-1 right-1 text-xs text-slate-400/20 select-none">
           {rank + 1}
@@ -38,16 +38,16 @@ export default function AddonCard({
               class="w-16 h-16 rounded select-none"
             />
           )}
-          <div class="leading-tight">
+          <div class="leading-tight flex-1 min-w-0">
             <p class="font-bold text-lg">{addon.name}</p>
             {addon.authors.length > 0 && (
-              <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
+              <p class="whitespace-nowrap overflow-hidden text-ellipsis">
                 By {formatList(addon.authors)}
               </p>
             )}
             {(addon.mc_version != "" ||
               addon.custom.supported_versions != null) && (
-              <p>
+              <p class="overflow-hidden text-ellipsis line-clamp-1">
                 {pickVersion(addon.mc_version, addon.custom.supported_versions)}
               </p>
             )}

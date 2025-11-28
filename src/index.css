@@ -25,3 +25,29 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 3rem;
 }
+
+/* Custom scrollbar styling for website theme */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(216 180 254 / 0.3) rgb(15 23 42 / 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgb(15 23 42 / 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(216 180 254 / 0.3);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgb(216 180 254 / 0.5);
+}

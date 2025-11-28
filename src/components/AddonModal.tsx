@@ -43,12 +43,13 @@ export default function AddonModal({
       onClick={closeAddonModal}
     >
       <div
-        className="z-20 bg-slate-900 border border-purple-300/20 rounded w-3/4 h-11/12 flex flex-col justify-between items-center p-5 text-slate-400 max-sm:w-11/12"
+        className="z-20 bg-slate-900 border border-purple-300/20 rounded w-3/4 h-[88vh] max-h-[88vh] flex flex-col text-slate-400 max-sm:w-11/12 max-sm:h-[90vh] max-md:w-11/12 max-md:h-[90vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div class="w-full relative">
+        {/* Fixed Header Section */}
+        <div class="flex-none p-5 pb-0 w-full relative">
           <button
-            class="absolute top-0.5 right-2 cursor-pointer"
+            class="absolute top-5 right-5 cursor-pointer z-10"
             onClick={closeAddonModal}
           >
             <svg
@@ -61,73 +62,75 @@ export default function AddonModal({
               <path d="M88.447 38.528H11.554a2.024 2.024 0 0 0-2.024 2.024v18.896c0 1.118.907 2.024 2.024 2.024h76.892a2.024 2.024 0 0 0 2.023-2.024V40.552a2.023 2.023 0 0 0-2.022-2.024" />
             </svg>
           </button>
-          <section>
-            <div class="flex gap-2">
-              {addon.custom.icon || addon.links.icon ? (
-                <img
-                  src={addon.custom.icon || addon.links.icon}
-                  alt="icon"
-                  class="w-20 h-2k rounded select-none"
-                />
-              ) : (
-                <img
-                  src="https://raw.githubusercontent.com/MeteorDevelopment/meteor-addon-template/refs/heads/master/src/main/resources/assets/template/icon.png"
-                  alt="icon"
-                  class="w-16 h-16 rounded select-none"
-                />
+          <div class="flex gap-2">
+            {addon.custom.icon || addon.links.icon ? (
+              <img
+                src={addon.custom.icon || addon.links.icon}
+                alt="icon"
+                class="w-20 h-20 rounded select-none"
+              />
+            ) : (
+              <img
+                src="https://raw.githubusercontent.com/MeteorDevelopment/meteor-addon-template/refs/heads/master/src/main/resources/assets/template/icon.png"
+                alt="icon"
+                class="w-16 h-16 rounded select-none"
+              />
+            )}
+            <div class="leading-tight flex-1 min-w-0">
+              <h2 className="text-2xl font-bold font-purple-300">
+                {addon.name}
+              </h2>
+              {addon.authors.length != 0 && (
+                <p class="whitespace-nowrap overflow-hidden text-ellipsis">
+                  By {formatList(addon.authors)}
+                </p>
               )}
-              <div class="leading-tight">
-                <h2 className="text-2xl font-bold font-purple-300">
-                  {addon.name}
-                </h2>
-                {addon.authors.length != 0 && (
-                  <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
-                    By {formatList(addon.authors)}
-                  </p>
-                )}
-                {(addon.mc_version != "" ||
-                  addon.custom.supported_versions != null) && (
-                  <p>
-                    {pickVersion(
-                      addon.mc_version,
-                      addon.custom.supported_versions,
-                    )}
-                  </p>
-                )}
-              </div>
+              {(addon.mc_version != "" ||
+                addon.custom.supported_versions != null) && (
+                <p class="overflow-hidden text-ellipsis line-clamp-1">
+                  {pickVersion(
+                    addon.mc_version,
+                    addon.custom.supported_versions,
+                  )}
+                </p>
+              )}
             </div>
-            <div class="flex justify-between items-center py-2">
-              <div class="flex gap-2">
-                {addon.repo.stars > 0 && (
-                  <div class="flex gap-1 justify-center items-center select-none">
-                    <Star style="w-5 h-5" />
-                    <p>{addon.repo.stars}</p>
-                  </div>
-                )}
-                {addon.repo.downloads > 0 && (
-                  <div class="flex gap-1 justify-center items-center select-none">
-                    <Download style="w-5 h-5" />
-                    <p>{addon.repo.downloads}</p>
-                  </div>
-                )}
-              </div>
-              <div class="flex gap-2">
-                {addon.verified && <Verified style="h-7 w-7" />}
-                {!addon.verified && false && <Warning style="h-7 w-7" />}
-                {addon.repo.archived && <Archived style="w-7 h-7" />}
-                {addon.repo.fork && <Fork style="w-7 h-7" />}
-              </div>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <div class="flex gap-2">
+              {addon.repo.stars > 0 && (
+                <div class="flex gap-1 justify-center items-center select-none">
+                  <Star style="w-5 h-5" />
+                  <p>{addon.repo.stars}</p>
+                </div>
+              )}
+              {addon.repo.downloads > 0 && (
+                <div class="flex gap-1 justify-center items-center select-none">
+                  <Download style="w-5 h-5" />
+                  <p>{addon.repo.downloads}</p>
+                </div>
+              )}
             </div>
-            <p class="text-wrap break-words [word-break:break-word]">
-              {addon.custom.description || addon.description}
+            <div class="flex gap-2">
+              {addon.verified && <Verified style="h-7 w-7" />}
+              {!addon.verified && false && <Warning style="h-7 w-7" />}
+              {addon.repo.archived && <Archived style="w-7 h-7" />}
+              {addon.repo.fork && <Fork style="w-7 h-7" />}
+            </div>
+          </div>
+        </div>
+
+        {/* Scrollable Content Section */}
+        <div class="flex-1 overflow-y-auto custom-scrollbar px-5 py-3">
+          <p class="text-wrap break-words [word-break:break-word]">
+            {addon.custom.description || addon.description}
+          </p>
+          <div class="py-2">
+            <p class="text-slate-600">
+              Last Update:{" "}
+              {new Date(addon.repo.last_update).toLocaleDateString()}
             </p>
-            <div>
-              <p class="text-slate-600">
-                Last Update:{" "}
-                {new Date(addon.repo.last_update).toLocaleDateString()}
-              </p>
-            </div>
-          </section>
+          </div>
           {addon.features && (
             <FeatureSection
               features={addon.features}
@@ -136,7 +139,9 @@ export default function AddonModal({
             />
           )}
         </div>
-        <section class="flex items-center justify-center gap-2 w-1/2 max-md:w-3/4 max-sm:w-full pt-2">
+
+        {/* Fixed Footer Section */}
+        <section class="flex-none flex items-center justify-center gap-2 w-full p-5 pt-3 border-t border-purple-300/10">
           {addon.links.download !== "" && (
             <>
               <LinkButton
