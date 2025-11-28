@@ -46,7 +46,6 @@ export default function AddonModal({
         className="z-20 bg-slate-900 border border-purple-300/20 rounded w-3/4 h-[88vh] max-h-[88vh] flex flex-col text-slate-400 max-sm:w-11/12 max-sm:h-[90vh] max-md:w-11/12 max-md:h-[90vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Fixed Header Section */}
         <div class="flex-none p-5 pb-0 w-full relative">
           <button
             class="absolute top-5 right-5 cursor-pointer z-10"
@@ -119,8 +118,6 @@ export default function AddonModal({
             </div>
           </div>
         </div>
-
-        {/* Scrollable Content Section */}
         <div class="flex-1 overflow-y-auto custom-scrollbar px-5 py-3">
           <p class="text-wrap break-words [word-break:break-word]">
             {addon.custom.description || addon.description}
@@ -139,23 +136,22 @@ export default function AddonModal({
             />
           )}
         </div>
-
-        {/* Fixed Footer Section */}
         <section class="flex-none flex items-center justify-center gap-2 w-full p-5 pt-3 border-t border-purple-300/10">
-          {addon.links.download !== "" && (
-            <>
+          {addon.links.downloads.length > 0 && (
+            <div className="flex flex-col w-1/2">
               <LinkButton
-                destination={addon.links.download}
+                destination={addon.links.downloads[0]}
                 text="Download"
-                className="w-1/2"
+                className="w-full"
               />
-              <LinkButton
-                destination={`https://github.com/${addon.repo.owner}/${addon.repo.name}/releases/latest`}
+              <a
+                href={`https://github.com/${addon.repo.owner}/${addon.repo.name}/releases/latest`}
                 target="_blank"
-                text="Latest Release"
-                className="w-1/2"
-              />
-            </>
+                class="text-purple-300 text-xs font-medium cursor-pointer hover:text-purple-400 transition-all ease-in-out duration-300"
+              >
+                Download on GitHub
+              </a>
+            </div>
           )}
           {addon.links.github != "" && (
             <a href={addon.links.github} target="_blank">

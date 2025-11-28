@@ -18,7 +18,7 @@ export default interface Addon {
   };
   links: {
     github: string;
-    download: string;
+    downloads: string[];
     discord: string;
     homepage: string;
     icon: string;
