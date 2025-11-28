@@ -7,7 +7,11 @@ import loadAddons from "../helpers/addonLoader";
 import AddonCard from "../components/AddonCard";
 import type Addon from "../helpers/addon";
 import Button from "../components/Button";
-import { parseVersion, compareParsedVersions, sortVersionsDescending } from "../helpers/sortVersions";
+import {
+  parseVersion,
+  compareParsedVersions,
+  sortVersionsDescending,
+} from "../helpers/sortVersions";
 
 export enum SortMode {
   Stars,
@@ -132,7 +136,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
       const passesForkCheck = includeForks || !addon.repo.fork;
       const passesArchivedCheck = includeArchived || !addon.repo.archived;
       const passesReleaseCheck =
-        !onlyWithReleases || addon.links.download !== "";
+        !onlyWithReleases || addon.links.downloads.length != 0;
       const passesVersionCheck =
         selectedVersion === "All" ||
         addon.mc_version === selectedVersion ||
@@ -376,7 +380,11 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             active={onlyWithReleases}
           />
           <Dropdown
-            label={selectedVersion === "All" ? "All Versions" : `For ${selectedVersion}`}
+            label={
+              selectedVersion === "All"
+                ? "All Versions"
+                : `For ${selectedVersion}`
+            }
             selected={selectedVersion}
             items={allVersions}
             onSelect={(version: string) => setSelectedVersion(version)}
