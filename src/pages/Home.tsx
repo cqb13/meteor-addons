@@ -1,12 +1,13 @@
 import AddonModal from "../components/AddonModal.tsx";
 import { useState, useEffect } from "preact/hooks";
 import type { RoutableProps } from "preact-router";
-import Dropdown from "../components/Dropdown.tsx";
+import TerminalDropdown from "../components/TerminalDropdown.tsx";
 import type { FunctionalComponent } from "preact";
 import loadAddons from "../helpers/addonLoader";
 import AddonCard from "../components/AddonCard";
 import type Addon from "../helpers/addon";
 import Button from "../components/Button";
+import { parseVersion, compareParsedVersions, sortVersionsDescending } from "../helpers/sortVersions";
 
 export enum SortMode {
   Stars,
@@ -99,17 +100,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
         }
       });
 
-      let sortedVersions = [...versions].sort((a: string, b: string) => {
-        const aParts = a.split(".").map(Number);
-        const bParts = b.split(".").map(Number);
-
-        for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-          const diff = (bParts[i] || 0) - (aParts[i] || 0);
-          if (diff !== 0) return diff;
-        }
-
-        return 0;
-      });
+      let sortedVersions = sortVersionsDescending(versions);
 
       sortedVersions.unshift("All");
 
@@ -291,8 +282,6 @@ const Home: FunctionalComponent<RoutableProps> = () => {
     if (sortMode === SortMode.McVersion) return;
     setSortMode(SortMode.McVersion);
 
-    const parseVersion = (v: string) => v?.match(/\d+/g)?.map(Number) ?? [];
-
     const getVersions = (addon: Addon): string[] => {
       const sv = addon.custom?.supported_versions;
       if (sv && sv.length > 0) return sv;
@@ -303,15 +292,6 @@ const Home: FunctionalComponent<RoutableProps> = () => {
       const parsed = getVersions(addon).map(parseVersion);
       parsed.sort((a, b) => compareParsedVersions(b, a));
       return parsed[0] ?? [];
-    };
-
-    const compareParsedVersions = (a: number[], b: number[]) => {
-      const len = Math.max(a.length, b.length);
-      for (let i = 0; i < len; i++) {
-        const diff = (a[i] ?? 0) - (b[i] ?? 0);
-        if (diff !== 0) return diff;
-      }
-      return 0;
     };
 
     const sorted = [...addons].sort((a, b) =>
@@ -365,8 +345,8 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             type="text"
             placeholder={
               featureSearch
-                ? "search features — try hud:, module:, or command:"
-                : "search addons, authors, and tags"
+                ? "Search Features — Try hud:, module:, or command:"
+                : "Search addons, authors, and tags"
             }
             onInput={searchAddons}
             value={searchValue}
@@ -395,8 +375,8 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             action={() => setOnlyWithReleases(!onlyWithReleases)}
             active={onlyWithReleases}
           />
-          <Dropdown
-            label={`For ${selectedVersion}`}
+          <TerminalDropdown
+            label={selectedVersion === "All" ? "All Versions" : `For ${selectedVersion}`}
             selected={selectedVersion}
             items={allVersions}
             onSelect={(version: string) => setSelectedVersion(version)}
@@ -404,7 +384,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
           />
         </section>
         <section class="flex gap-2 w-full">
-          <Dropdown
+          <TerminalDropdown
             label={`Sort By ${sortModeToString(sortMode)}`}
             selected={sortMode}
             items={[
