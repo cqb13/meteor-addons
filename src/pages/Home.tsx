@@ -429,7 +429,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             </p>
           </div>
         </section>
-        <section class="flex gap-2 flex-wrap justify-center items-center w-full">
+        <section class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-2 w-full">
           {visibleAddons?.map((addon: Addon, key: number) => (
             <AddonCard
               addon={addon}
