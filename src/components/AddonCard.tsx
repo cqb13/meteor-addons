@@ -38,16 +38,16 @@ export default function AddonCard({
               class="w-16 h-16 rounded select-none"
             />
           )}
-          <div class="leading-tight">
+          <div class="leading-tight flex-1 min-w-0">
             <p class="font-bold text-lg">{addon.name}</p>
             {addon.authors.length > 0 && (
-              <p class="whitespace-nowrap overflow-hidden text-ellipsis w-72">
+              <p class="whitespace-nowrap overflow-hidden text-ellipsis">
                 By {formatList(addon.authors)}
               </p>
             )}
             {(addon.mc_version != "" ||
               addon.custom.supported_versions != null) && (
-              <p>
+              <p class="overflow-hidden text-ellipsis line-clamp-1">
                 {pickVersion(addon.mc_version, addon.custom.supported_versions)}
               </p>
             )}

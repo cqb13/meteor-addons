@@ -1,4 +1,5 @@
 import formatList from "./formatList";
+import { sortVersionsDescending } from "./sortVersions";
 
 export default function pickVersion(
   mcVersion: string,
@@ -7,6 +8,8 @@ export default function pickVersion(
   if (supportedVersions == null || supportedVersions.length == 0) {
     return "For " + mcVersion;
   } else {
-    return "For " + formatList(supportedVersions);
+    // Sort versions in descending order so newest versions appear first
+    const sortedVersions = sortVersionsDescending(supportedVersions);
+    return "For " + formatList(sortedVersions);
   }
 }

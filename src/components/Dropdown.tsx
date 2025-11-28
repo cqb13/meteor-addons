@@ -63,7 +63,7 @@ export default function Dropdown<T>({
       <div
         className={`${
           opened ? "absolute" : "hidden"
-        } mt-2 w-full rounded backdrop-blur-2xl bg-slate-950/50 border border-purple-300/20 z-10 max-h-96 overflow-y-auto`}
+        } mt-2 w-full rounded backdrop-blur-2xl bg-slate-950/50 border border-purple-300/20 z-10 max-h-96 overflow-y-auto custom-scrollbar`}
       >
         <div className="py-2 flex flex-col items-center">
           {items.map((item, i) => (
