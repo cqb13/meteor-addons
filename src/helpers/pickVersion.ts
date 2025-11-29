@@ -1,5 +1,5 @@
-import formatList from "./formatList";
 import { sortVersionsDescending } from "./sortVersions";
+import formatList from "./formatList";
 
 export default function pickVersion(
   mcVersion: string,

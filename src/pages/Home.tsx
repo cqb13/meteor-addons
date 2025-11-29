@@ -1,6 +1,6 @@
 import AddonModal from "../components/AddonModal.tsx";
-import { useState, useEffect } from "preact/hooks";
 import type { RoutableProps } from "preact-router";
+import { useState, useEffect } from "preact/hooks";
 import Dropdown from "../components/Dropdown.tsx";
 import type { FunctionalComponent } from "preact";
 import loadAddons from "../helpers/addonLoader";

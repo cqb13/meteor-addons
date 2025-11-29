@@ -47,7 +47,7 @@ export default function AddonCard({
             )}
             {(addon.mc_version != "" ||
               addon.custom.supported_versions != null) && (
-              <p class="overflow-hidden text-ellipsis line-clamp-1">
+              <p class="overflow-hidden text-ellipsis line-clamp-2 [overflow-wrap:anywhere] [word-break:break-word]">
                 {pickVersion(addon.mc_version, addon.custom.supported_versions)}
               </p>
             )}

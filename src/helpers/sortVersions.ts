@@ -10,10 +10,7 @@ export function parseVersion(v: string): number[] {
  * Compare two parsed version arrays
  * Returns positive if a > b, negative if a < b, 0 if equal
  */
-export function compareParsedVersions(
-  a: number[],
-  b: number[],
-): number {
+export function compareParsedVersions(a: number[], b: number[]): number {
   const len = Math.max(a.length, b.length);
   for (let i = 0; i < len; i++) {
     const diff = (a[i] ?? 0) - (b[i] ?? 0);
