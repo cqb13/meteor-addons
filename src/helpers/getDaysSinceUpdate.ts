@@ -10,7 +10,7 @@ export default async function getDaysSinceUpdatedAddons(): Promise<
 
   while (true) {
     const res = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/commits?per_page=${perPage}&page=${page}`,
+      `https://api.github.com/repos/${owner}/${repo}/commits?sha=addons&per_page=${perPage}&page=${page}`,
       {
         headers: {
           Accept: "application/vnd.github+json",
@@ -32,17 +32,28 @@ export default async function getDaysSinceUpdatedAddons(): Promise<
       if (
         commit.commit.message.toLowerCase().includes(searchText.toLowerCase())
       ) {
-        const commitDate: any = new Date(commit.commit.author.date);
-        const now: any = new Date();
-        const diffMs = now - commitDate;
-        const daysAgo = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        if (daysAgo != 1 && daysAgo != 0) {
-          return `Last Update: ${daysAgo} days ago`;
-        } else if (daysAgo == 1) {
-          return `Last Update: ${daysAgo} day ago`;
-        } else {
-          return `Last Update: Today`;
+        const commitDate = new Date(commit.commit.author.date);
+        const now = new Date();
+        const diffMs = now.getTime() - commitDate.getTime();
+
+        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+
+        if (days > 1) {
+          return `Last Update: ${days} days ago`;
         }
+
+        if (days === 1) {
+          return `Last Update: 1 day ago`;
+        }
+
+        if (hours >= 1) {
+          return hours === 1
+            ? `Last Update: 1 hour ago`
+            : `Last Update: ${hours} hours ago`;
+        }
+
+        return `Last Update: less than an hour ago`;
       }
     }
 
