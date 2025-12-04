@@ -27,6 +27,7 @@ export default interface Addon {
     description: string;
     tags: string[];
     supported_versions: string[];
+    latest_release: string;
     icon: string;
     discord: string;
     homepage: string;
