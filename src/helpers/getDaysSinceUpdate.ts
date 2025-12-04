@@ -36,24 +36,21 @@ export default async function getDaysSinceUpdatedAddons(): Promise<
         const now = new Date();
         const diffMs = now.getTime() - commitDate.getTime();
 
-        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-        if (days > 1) {
-          return `Last Update: ${days} days ago`;
-        }
+        if (diffDays > 1) return `Last Update: ${diffDays} days ago`;
+        if (diffDays === 1) return `Last Update: 1 day ago`;
 
-        if (days === 1) {
-          return `Last Update: 1 day ago`;
-        }
-
-        if (hours >= 1) {
-          return hours === 1
+        if (diffHours >= 1)
+          return diffHours === 1
             ? `Last Update: 1 hour ago`
-            : `Last Update: ${hours} hours ago`;
-        }
+            : `Last Update: ${diffHours} hours ago`;
 
-        return `Last Update: less than an hour ago`;
+        return diffMinutes < 1
+          ? `Last Update: less than a minute ago`
+          : `Last Update: ${diffMinutes} minutes ago`;
       }
     }
 
