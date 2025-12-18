@@ -140,7 +140,11 @@ export default function AddonModal({
           {addon.links.downloads.length > 0 && (
             <div className="flex flex-col w-1/2">
               <LinkButton
-                destination={addon.links.downloads[0]}
+                destination={
+                  addon.links.latest_release
+                    ? addon.links.latest_release
+                    : addon.links.downloads[0]
+                }
                 text="Download"
                 className="w-full"
               />

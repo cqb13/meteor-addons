@@ -20,6 +20,7 @@ export default interface Addon {
     github: string;
     downloads: string[];
     discord: string;
+    latest_release: string;
     homepage: string;
     icon: string;
   };
