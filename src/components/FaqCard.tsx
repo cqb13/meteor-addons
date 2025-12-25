@@ -31,10 +31,10 @@ export default function FaqCard({
       role="button"
     >
       <div
-        className="flex items-center justify-between gap-0.5 hover:underline cursor-pointer"
+        className="flex items-center justify-between gap-0.5 text-purple-300 hover:text-purple-400 transition-colors duration-300 ease-in-out cursor-pointer"
         onClick={toggleAnswer}
       >
-        <h3 className="text-xl text-purple-300 font-medium">{question}</h3>
+        <h3 className="text-xl font-medium">{question}</h3>
         <svg
           version="1.1"
           id="Layer_1"
@@ -62,9 +62,7 @@ export default function FaqCard({
           isAnswerVisible ? "max-h-[300px]" : "max-h-0"
         }`}
         aria-hidden={!isAnswerVisible}
-        >
-        {/* max-h-[300px] is sufficient here because FAQ answers are short single-paragraph responses.
-        If answers grow significantly longer in the future, consider implementing dynamic height measurement via CSS variables*/}
+      >
         <p className="font-body text-lg">{answer}</p>
       </div>
     </section>
