@@ -217,7 +217,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
                     homepage: "https://www.meteoraddons.com",
                   },
                   null,
-                  2,
+                  2
                 )}
               </pre>
             </section>
@@ -233,7 +233,9 @@ const About: FunctionalComponent<RoutableProps> = () => {
         </article>
       </section>
       <section class="w-3/5 max-lg:w-4/5 max-md:w-full">
-        <h2 class="font-medium text-4xl pb-2">FAQ</h2>
+        <h2 class="font-medium text-4xl pb-4" id="faq">
+          FAQ
+        </h2>
         <article class="flex flex-col gap-2">
           <FaqCard
             question="Is this site official?"
