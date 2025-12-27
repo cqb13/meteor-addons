@@ -100,13 +100,13 @@ export default function AddonModal({
               {addon.repo.stars > 0 && (
                 <div class="flex gap-1 justify-center items-center select-none">
                   <Star style="w-5 h-5" />
-                  <p>{addon.repo.stars}</p>
+                  <p>{addon.repo.stars.toLocaleString()}</p>
                 </div>
               )}
               {addon.repo.downloads > 0 && (
                 <div class="flex gap-1 justify-center items-center select-none">
                   <Download style="w-5 h-5" />
-                  <p>{addon.repo.downloads}</p>
+                  <p>{addon.repo.downloads.toLocaleString()}</p>
                 </div>
               )}
             </div>

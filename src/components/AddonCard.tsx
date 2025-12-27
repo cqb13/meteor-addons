@@ -75,13 +75,13 @@ export default function AddonCard({
             {addon.repo.stars > 0 && (
               <div class="flex gap-1 justify-center items-center select-none">
                 <Star style="w-3 h-3" />
-                <p class="text-xs">{addon.repo.stars}</p>
+                <p class="text-xs">{addon.repo.stars.toLocaleString()}</p>
               </div>
             )}
             {addon.repo.downloads > 0 && (
               <div class="flex gap-1 justify-center items-center select-none">
                 <Download style="w-3 h-3" />
-                <p class="text-xs">{addon.repo.downloads}</p>
+                <p class="text-xs">{addon.repo.downloads.toLocaleString()}</p>
               </div>
             )}
           </div>
