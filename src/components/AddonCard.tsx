@@ -25,19 +25,19 @@ export default function AddonCard({
           {rank + 1}
         </p>
         <div class="flex gap-2 items-center">
-          {addon.custom.icon || addon.links.icon ? (
-            <img
-              src={addon.custom.icon || addon.links.icon}
-              alt="icon"
-              class="w-16 h-16 rounded select-none"
-            />
-          ) : (
-            <img
-              src="https://raw.githubusercontent.com/MeteorDevelopment/meteor-addon-template/refs/heads/master/src/main/resources/assets/template/icon.png"
-              alt="icon"
-              class="w-16 h-16 rounded select-none"
-            />
-          )}
+          <img
+            src={
+              addon.custom.icon ||
+              addon.links.icon ||
+              "/default-addon-icon.webp"
+            }
+            alt="icon"
+            class="w-16 h-16 rounded select-none"
+            loading="lazy"
+            onError={(e) =>
+              ((e.target as HTMLImageElement).src = "/default-addon-icon.webp")
+            }
+          />
           <div class="leading-tight flex-1 min-w-0">
             <p class="font-bold text-lg">{addon.name}</p>
             {addon.authors.length > 0 && (
