@@ -69,7 +69,7 @@ export default function AddonModal({
                 "/default-addon-icon.webp"
               }
               alt="icon"
-              class="w-16 h-16 rounded select-none"
+              class="w-20 h-20 rounded select-none"
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
                 if (
@@ -94,7 +94,7 @@ export default function AddonModal({
                 <p class="overflow-hidden text-ellipsis line-clamp-1">
                   {pickVersion(
                     addon.mc_version,
-                    addon.custom.supported_versions
+                    addon.custom.supported_versions,
                   )}
                 </p>
               )}
@@ -124,7 +124,7 @@ export default function AddonModal({
           </div>
         </div>
         <div class="flex-1 overflow-y-auto custom-scrollbar px-5 py-3">
-          <p class="text-wrap break-words [word-break:break-word]">
+          <p class="text-wrap wrap-break-words [word-break:break-word]">
             {addon.custom.description || addon.description}
           </p>
           <div class="py-2">
