@@ -34,10 +34,15 @@ export default function AddonCard({
             alt="icon"
             class="w-16 h-16 rounded select-none"
             loading="lazy"
-            onError={(e) =>
-              ((e.target as HTMLImageElement).src = "/default-addon-icon.webp")
-            }
-          />
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              if (
+                img.src !== `${window.location.origin}/default-addon-icon.webp`
+              ) {
+                img.src = "/default-addon-icon.webp";
+              }
+            }}
+          />{" "}
           <div class="leading-tight flex-1 min-w-0">
             <p class="font-bold text-lg">{addon.name}</p>
             {addon.authors.length > 0 && (
