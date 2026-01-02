@@ -62,19 +62,24 @@ export default function AddonModal({
             </svg>
           </button>
           <div class="flex gap-2">
-            {addon.custom.icon || addon.links.icon ? (
-              <img
-                src={addon.custom.icon || addon.links.icon}
-                alt="icon"
-                class="w-20 h-20 rounded select-none"
-              />
-            ) : (
-              <img
-                src="https://raw.githubusercontent.com/MeteorDevelopment/meteor-addon-template/refs/heads/master/src/main/resources/assets/template/icon.png"
-                alt="icon"
-                class="w-16 h-16 rounded select-none"
-              />
-            )}
+            <img
+              src={
+                addon.custom.icon ||
+                addon.links.icon ||
+                "/default-addon-icon.webp"
+              }
+              alt="icon"
+              class="w-16 h-16 rounded select-none"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                if (
+                  img.src !==
+                  `${window.location.origin}/default-addon-icon.webp`
+                ) {
+                  img.src = "/default-addon-icon.webp";
+                }
+              }}
+            />
             <div class="leading-tight flex-1 min-w-0">
               <h2 className="text-2xl font-bold font-purple-300">
                 {addon.name}
@@ -89,7 +94,7 @@ export default function AddonModal({
                 <p class="overflow-hidden text-ellipsis line-clamp-1">
                   {pickVersion(
                     addon.mc_version,
-                    addon.custom.supported_versions,
+                    addon.custom.supported_versions
                   )}
                 </p>
               )}

@@ -42,7 +42,7 @@ export default function AddonCard({
                 img.src = "/default-addon-icon.webp";
               }
             }}
-          />{" "}
+          />
           <div class="leading-tight flex-1 min-w-0">
             <p class="font-bold text-lg">{addon.name}</p>
             {addon.authors.length > 0 && (
