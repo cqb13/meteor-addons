@@ -44,7 +44,7 @@ export default function FaqCard({
           viewBox="0 0 100 100"
           enableBackground="new 0 0 100 100"
           className={`transform transition-all duration-300 ease-[cubic-bezier(0.87, 0, 0.13, 1)] fill-purple-300 hover:fill-purple-400 ${
-            isAnswerVisible ? "rotate-45" : ""
+            isAnswerVisible ? "" : "rotate-45"
           }`}
         >
           <path
