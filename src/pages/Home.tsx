@@ -152,12 +152,12 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             if (lowerSearch.startsWith("hud:") && features.hud_elements) {
               const query = lowerSearch.slice(4);
               return features.hud_elements.some((e) =>
-                e.toLowerCase().includes(query),
+                e.name.toLowerCase().includes(query),
               );
             } else if (lowerSearch.startsWith("module:") && features.modules) {
               const query = lowerSearch.slice(7);
               return features.modules.some((e) =>
-                e.toLowerCase().includes(query),
+                e.name.toLowerCase().includes(query),
               );
             } else if (
               lowerSearch.startsWith("command:") &&
@@ -165,18 +165,18 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             ) {
               const query = lowerSearch.slice(8);
               return features.commands.some((e) =>
-                e.toLowerCase().includes(query),
+                e.name.toLowerCase().includes(query),
               );
             } else {
               return (
                 features.modules?.some((e) =>
-                  e.toLowerCase().includes(lowerSearch),
+                  e.name.toLowerCase().includes(lowerSearch),
                 ) ||
                 features.commands?.some((e) =>
-                  e.toLowerCase().includes(lowerSearch),
+                  e.name.toLowerCase().includes(lowerSearch),
                 ) ||
                 features.hud_elements?.some((e) =>
-                  e.toLowerCase().includes(lowerSearch),
+                  e.name.toLowerCase().includes(lowerSearch),
                 )
               );
             }

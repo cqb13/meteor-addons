@@ -1,4 +1,4 @@
-import type { Features } from "../helpers/addon";
+import type { Feature, Features } from "../helpers/addon";
 
 export default function FeatureSection({
   features,
@@ -36,10 +36,10 @@ export default function FeatureSection({
             </h4>
             <div className="overflow-y-auto custom-scrollbar max-h-48 lg:max-h-96">
               <ul className="flex flex-col list-disc pl-6 gap-1 text-sm pr-2">
-                {features.modules.map((feature: string, key: number) => (
+                {features.modules.map((feature: Feature, key: number) => (
                   <li
                     key={key}
-                    className={`${featureSearch == true && feature.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forCommand) ? "bg-purple-300/10 rounded px-1" : ""}`}
+                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forCommand) ? "bg-purple-300/10 rounded px-1" : ""}`}
                   >
                     {feature}
                   </li>
@@ -57,10 +57,10 @@ export default function FeatureSection({
             </h4>
             <div className="overflow-y-auto custom-scrollbar max-h-48 lg:max-h-96">
               <ul className="flex flex-col list-disc pl-6 gap-1 text-sm pr-2">
-                {features.commands.map((feature: string, key: number) => (
+                {features.commands.map((feature: Feature, key: number) => (
                   <li
                     key={key}
-                    className={`${featureSearch == true && feature.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
+                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
                   >
                     {feature}
                   </li>
@@ -78,10 +78,10 @@ export default function FeatureSection({
             </h4>
             <div className="overflow-y-auto custom-scrollbar max-h-48 lg:max-h-96">
               <ul className="flex flex-col list-disc pl-6 gap-1 text-sm pr-2">
-                {features.hud_elements.map((feature: string, key: number) => (
+                {features.hud_elements.map((feature: Feature, key: number) => (
                   <li
                     key={key}
-                    className={`${featureSearch == true && feature.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forCommand || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
+                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forCommand || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
                   >
                     {feature}
                   </li>

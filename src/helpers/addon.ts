@@ -36,8 +36,13 @@ export default interface Addon {
 }
 
 export interface Features {
-  modules: string[];
-  commands: string[];
-  hud_elements: string[];
+  modules: Feature[];
+  commands: Feature[];
+  hud_elements: Feature[];
   feature_count: number;
+}
+
+export interface Feature {
+  name: string;
+  description: string;
 }
