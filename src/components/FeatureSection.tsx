@@ -1,4 +1,5 @@
 import type { Feature, Features } from "../helpers/addon";
+import { useState } from "preact/hooks";
 
 export default function FeatureSection({
   features,
@@ -12,6 +13,7 @@ export default function FeatureSection({
   const forHud = searchValue.toLowerCase().startsWith("hud:");
   const forModule = searchValue.toLowerCase().startsWith("module:");
   const forCommand = searchValue.toLowerCase().startsWith("command:");
+  const [open, setOpen] = useState<string | null>(null);
 
   let actualSearch = searchValue;
 
@@ -39,9 +41,18 @@ export default function FeatureSection({
                 {features.modules.map((feature: Feature, key: number) => (
                   <li
                     key={key}
-                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forCommand) ? "bg-purple-300/10 rounded px-1" : ""}`}
+                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forCommand) ? "bg-purple-300/10 rounded px-1" : ""} cursor-pointer`}
+                    onClick={() =>
+                      setOpen(open === feature.name ? null : feature.name)
+                    }
                   >
-                    {feature.name}
+                    <div className="font-medium">{feature.name}</div>
+
+                    {open === feature.name && feature.description && (
+                      <div className="mt-1 text-xs text-gray-400">
+                        {feature.description}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -60,9 +71,18 @@ export default function FeatureSection({
                 {features.commands.map((feature: Feature, key: number) => (
                   <li
                     key={key}
-                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
+                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forModule) ? "bg-purple-300/10 rounded px-1" : ""} cursor-pointer`}
+                    onClick={() =>
+                      setOpen(open === feature.name ? null : feature.name)
+                    }
                   >
-                    {feature.name}
+                    <div className="font-medium">{feature.name}</div>
+
+                    {open === feature.name && feature.description && (
+                      <div className="mt-1 text-xs text-gray-400">
+                        {feature.description}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -81,9 +101,18 @@ export default function FeatureSection({
                 {features.hud_elements.map((feature: Feature, key: number) => (
                   <li
                     key={key}
-                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forCommand || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
+                    className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forCommand || forModule) ? "bg-purple-300/10 rounded px-1" : ""} cursor-pointer`}
+                    onClick={() =>
+                      setOpen(open === feature.name ? null : feature.name)
+                    }
                   >
-                    {feature.name}
+                    <div className="font-medium">{feature.name}</div>
+
+                    {open === feature.name && feature.description && (
+                      <div className="mt-1 text-xs text-gray-400">
+                        {feature.description}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
