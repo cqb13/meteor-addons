@@ -343,7 +343,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
 
   return (
     <>
-      <main class="flex flex-col gap-2 items-center px-5 flex-grow">
+      <main class="flex flex-col gap-2 items-center px-5 grow">
         <section class="flex gap-2 w-11/12 max-sm:w-full relative">
           <input
             type="text"
@@ -354,13 +354,13 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             }
             onInput={searchAddons}
             value={searchValue}
-            class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full !outline-none"
+            class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full outline-none!"
           />
           <Button
             text={` ${featureSearch ? "Addons" : "Features"}`}
             action={toggleFeatureSearch}
             active={false}
-            className="!w-1/4"
+            className="w-1/4!"
           />
         </section>
         <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">

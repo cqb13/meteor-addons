@@ -52,7 +52,7 @@ export default function AddonCard({
             )}
             {(addon.mc_version != "" ||
               addon.custom.supported_versions != null) && (
-              <p class="overflow-hidden text-ellipsis line-clamp-2 [overflow-wrap:anywhere] [word-break:break-word]">
+              <p class="overflow-hidden text-ellipsis line-clamp-2 wrap-anywhere [word-break:break-word]">
                 {pickVersion(addon.mc_version, addon.custom.supported_versions)}
               </p>
             )}
@@ -70,7 +70,7 @@ export default function AddonCard({
             ))}
           </div>
         )}
-        <p class="overflow-hidden text-ellipsis line-clamp-5 [overflow-wrap:anywhere] [word-break:break-word]">
+        <p class="overflow-hidden text-ellipsis line-clamp-5 wrap-anywhere [word-break:break-word]">
           {addon.custom.description || addon.description}
         </p>
       </div>
