@@ -65,7 +65,7 @@ export function App() {
           class="hover:text-purple-400 transition-all duration-300 ease-in-out"
           target="_blank"
         >
-          copyright © 2025
+          copyright © 2026
         </a>
         <a
           href="https://github.com/cqb13"
