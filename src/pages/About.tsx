@@ -27,7 +27,7 @@ function Tag({ tag }: { tag: string }) {
 
 const About: FunctionalComponent<RoutableProps> = () => {
   return (
-    <main class="flex flex-col gap-5 items-center px-5 flex-grow">
+    <main class="flex flex-col gap-5 items-center px-5 grow">
       <section class="w-3/5 max-lg:w-4/5 max-md:w-full">
         <h2 class="font-medium text-4xl pb-2">About</h2>
         <article class="flex flex-col gap-2">
@@ -206,18 +206,18 @@ const About: FunctionalComponent<RoutableProps> = () => {
               to overide.
             </p>
             <section className="ml-5 p-5 bg-slate-950 border border-purple-300/20 rounded">
-              <pre className="font-mono text-purple-200 whitespace-pre max-sm:whitespace-pre-wrap break-words">
+              <pre className="font-mono text-purple-200 whitespace-pre max-sm:whitespace-pre-wrap wrap-break-words">
                 {JSON.stringify(
                   {
                     description: "A short description of your addon.",
                     tags: ["PvP", "Utility", "Theme", "..."],
                     supported_versions: ["1.21.7", "1.21.8"],
-                    icon: "https://meteoraddons.com/icon.png",
+                    icon: "https://www.meteoraddons.com/default-addon-icon.webp",
                     discord: "https://discord.gg/XU7Y9G46KD",
                     homepage: "https://www.meteoraddons.com",
                   },
                   null,
-                  2
+                  2,
                 )}
               </pre>
             </section>

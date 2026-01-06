@@ -46,8 +46,8 @@ export function App() {
           </a>
         </section>
       </nav>
-      <header class="p-5 text-7xl font-bold">
-        <h1 class="text-center">Meteor Addons</h1>
+      <header class="p-5 font-bold">
+        <h1 class="text-center text-7xl max-sm:text-5xl">Meteor Addons</h1>
         <p class="text-center text-sm text-slate-400">
           A list of free and open-source Meteor Client addons
         </p>
