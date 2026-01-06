@@ -79,7 +79,9 @@ const About: FunctionalComponent<RoutableProps> = () => {
         </article>
       </section>
       <section class="w-3/5 max-lg:w-4/5 max-md:w-full">
-        <h2 class="font-medium text-4xl pb-2">Developer Info</h2>
+        <h2 class="font-medium text-4xl pb-2" id="developer-info">
+          Developer Info
+        </h2>
         <article>
           <h3 class="text-xl">How to Verify Your Addon</h3>
           <article class="text-slate-400 flex flex-col gap-2">
