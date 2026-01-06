@@ -215,6 +215,11 @@ const About: FunctionalComponent<RoutableProps> = () => {
                     icon: "https://meteoraddons.com/default-addon-icon.webp",
                     discord: "https://discord.gg/XU7Y9G46KD",
                     homepage: "https://meteoraddons.com",
+                    feature_directories: {
+                      commands: ["modules/commands"],
+                      modules: ["modules/general"],
+                      hud_elements: ["modules/hud"],
+                    },
                   },
                   null,
                   2,
@@ -228,6 +233,36 @@ const About: FunctionalComponent<RoutableProps> = () => {
                   <Tag tag={t} />
                 ))}
               </div>
+            </article>
+            <article class="pl-5 flex flex-col gap-2">
+              <h4 class="text-purple-300 text-lg">Feature Directories</h4>
+              <p>
+                <span class="px-1 mx-1 bg-slate-950/50 rounded inline font-medium outline outline-purple-300/20">
+                  feature_directories
+                </span>
+                tells the scanner where to find your Java files for modules,
+                commands, and HUD elements.
+              </p>
+              <ul class="pl-5 list-disc">
+                <li>
+                  Start from the entrypoint package, remove the class name
+                  {" ->"} base path
+                  <span class="px-1 mx-1 bg-slate-950/50 rounded inline font-medium outline outline-purple-300/20">
+                    cqb13/NumbyHack.
+                  </span>
+                </li>
+                <li>
+                  List directories{" "}
+                  <span class="font-bold">relative to the base path</span>
+                </li>
+                <li>
+                  Only list directories, not files. Use forward slashes{" "}
+                  <span class="px-1 mx-1 bg-slate-950/50 rounded inline font-medium outline outline-purple-300/20">
+                    /
+                  </span>{" "}
+                  and no leading or ending slash.
+                </li>
+              </ul>
             </article>
           </article>
         </article>
