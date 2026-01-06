@@ -41,7 +41,7 @@ export default function FeatureSection({
                     key={key}
                     className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forCommand) ? "bg-purple-300/10 rounded px-1" : ""}`}
                   >
-                    {feature}
+                    {feature.name}
                   </li>
                 ))}
               </ul>
@@ -62,7 +62,7 @@ export default function FeatureSection({
                     key={key}
                     className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forHud || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
                   >
-                    {feature}
+                    {feature.name}
                   </li>
                 ))}
               </ul>
@@ -83,7 +83,7 @@ export default function FeatureSection({
                     key={key}
                     className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && !(forCommand || forModule) ? "bg-purple-300/10 rounded px-1" : ""}`}
                   >
-                    {feature}
+                    {feature.name}
                   </li>
                 ))}
               </ul>
