@@ -39,6 +39,8 @@ export interface Features {
   modules: Feature[];
   commands: Feature[];
   hud_elements: Feature[];
+  tabs: string[];
+  themes: string[];
   feature_count: number;
 }
 

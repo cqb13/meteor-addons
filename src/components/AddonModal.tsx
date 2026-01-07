@@ -123,7 +123,7 @@ export default function AddonModal({
             </div>
           </div>
         </div>
-        <div class="flex-1 overflow-y-auto custom-scrollbar px-5 py-3">
+        <div class="flex-1 overflow-y-auto custom-scrollbar px-5 py-2">
           <p class="text-wrap wrap-break-words [word-break:break-word]">
             {addon.custom.description || addon.description}
           </p>
