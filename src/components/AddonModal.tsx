@@ -146,6 +146,7 @@ export default function AddonModal({
             <div className="flex flex-col w-1/2">
               <LinkButton
                 destination={`https://github.com/${addon.repo.owner}/${addon.repo.name}/releases/latest`}
+                target="_blank"
                 text="Download on Github"
                 className="w-full"
               />
@@ -155,7 +156,6 @@ export default function AddonModal({
                     ? addon.links.latest_release
                     : addon.links.downloads[0]
                 }
-                target="_blank"
                 class="text-purple-300 text-xs font-medium cursor-pointer hover:text-purple-400 transition-all ease-in-out duration-300"
               >
                 Download last recorded release
