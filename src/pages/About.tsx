@@ -284,7 +284,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
           />
           <FaqCard
             question="Why is my addon not listed?"
-            answer="Your repository might not be on GitHub, match the search criteria, or it may be private. Make sure it is on GitHub, is public, and includes the necessary files."
+            answer="Your repository might not be indexed by GitHub, match the search criteria, or it may be private. Make sure it is on GitHub, is public, and includes the necessary files."
           />
           <FaqCard
             question="Why are my addons features missing?"
