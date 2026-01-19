@@ -114,6 +114,12 @@ export default function AddonModal({
                   <p>{addon.repo.downloads.toLocaleString()}</p>
                 </div>
               )}
+              {addon.repo.forks > 0 && (
+                <div class="flex gap-1 justify-center items-center select-none">
+                  <Fork style="w-5 h-5" />
+                  <p>{addon.repo.forks.toLocaleString()}</p>
+                </div>
+              )}
             </div>
             <div class="flex gap-2">
               {addon.verified && <Verified style="h-7 w-7" />}

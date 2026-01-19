@@ -11,6 +11,7 @@ export default interface Addon {
     name: string;
     archived: boolean;
     fork: boolean;
+    forks: number;
     stars: number;
     downloads: number;
     last_update: string;
