@@ -1,15 +1,15 @@
 import pickVersion from "../helpers/pickVersion.ts";
-import formatList from "../helpers/formatList.ts";
 import FeatureSection from "./FeatureSection.tsx";
-import Verified from "./icons/Verified.tsx";
+import formatList from "../helpers/formatList.ts";
 import Archived from "./icons/Archived.tsx";
 import Download from "./icons/Download.tsx";
-import type Addon from "../helpers/addon";
+import Verified from "./icons/Verified.tsx";
 import Warning from "./icons/Warning.tsx";
+import type Addon from "../helpers/addon";
+import { useEffect, useRef } from "react";
 import LinkButton from "./LinkButton";
 import Fork from "./icons/Fork.tsx";
 import Star from "./icons/Star.tsx";
-import { useEffect, useRef } from "react";
 
 export default function AddonModal({
   addon,
@@ -49,10 +49,8 @@ export default function AddonModal({
       ref={dialogRef}
       className="-translate-x-1/2 -translate-y-1/2 backdrop:backdrop-blur-lg bg-transparent left-1/2 top-1/2 w-3/4"
       onClose={closeAddonModal}
-      >
-      <section
-        className="bg-slate-900 border border-purple-300/20 flex flex-col h-[88vh] max-h-[88vh] max-md:h-[90vh] max-md:w-11/12 max-sm:h-[90vh] max-sm:w-11/12 overflow-hidden rounded text-slate-400 "
-      >
+    >
+      <section className="bg-slate-900 border border-purple-300/20 flex flex-col h-[88vh] max-h-[88vh] max-md:h-[90vh] max-md:w-11/12 max-sm:h-[90vh] max-sm:w-11/12 overflow-hidden rounded text-slate-400 ">
         <div class="flex-none p-5 pb-0 w-full relative">
           <button
             class="absolute top-5 right-5 cursor-pointer z-10"
