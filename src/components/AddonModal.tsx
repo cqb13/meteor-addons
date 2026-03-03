@@ -86,7 +86,11 @@ export default function AddonModal({
               }}
             />
             <div class="leading-tight flex-1 min-w-0">
-              <h2 className="text-2xl font-bold font-purple-300">
+              <h2
+                className="text-2xl font-bold font-purple-300 focus:outline-none"
+                tabindex={-1}
+                autoFocus
+              >
                 {addon.name}
               </h2>
               {addon.authors.length != 0 && (
