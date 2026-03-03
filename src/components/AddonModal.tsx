@@ -1,15 +1,15 @@
 import pickVersion from "../helpers/pickVersion.ts";
-import formatList from "../helpers/formatList.ts";
 import FeatureSection from "./FeatureSection.tsx";
-import Verified from "./icons/Verified.tsx";
+import formatList from "../helpers/formatList.ts";
 import Archived from "./icons/Archived.tsx";
 import Download from "./icons/Download.tsx";
-import type Addon from "../helpers/addon";
+import Verified from "./icons/Verified.tsx";
 import Warning from "./icons/Warning.tsx";
+import type Addon from "../helpers/addon";
+import { useEffect, useRef } from "react";
 import LinkButton from "./LinkButton";
 import Fork from "./icons/Fork.tsx";
 import Star from "./icons/Star.tsx";
-import { useEffect } from "react";
 
 export default function AddonModal({
   addon,
@@ -22,30 +22,35 @@ export default function AddonModal({
   searchValue: String;
   closeAddonModal: () => void;
 }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        closeAddonModal();
-      }
+    const dialog = dialogRef.current;
+
+    if (!dialog) return;
+    if (addon && !dialog.open) {
+      dialog.showModal();
+    } else if (!addon && dialog.open) {
+      dialog.close();
+    }
+
+    const handleBackdropClick = (e: MouseEvent) => {
+      if (e.target === dialog) closeAddonModal();
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [closeAddonModal]);
+    dialog.addEventListener("click", handleBackdropClick);
+    return () => dialog.removeEventListener("click", handleBackdropClick);
+  }, [addon, closeAddonModal]);
 
-  if (addon == null) {
-    return null;
-  }
+  if (addon == null) return null;
 
   return (
-    <section
-      className="bg-slate-950/20 backdrop-blur-lg w-screen h-screen fixed top-0 left-0 flex items-center justify-center z-50"
-      onClick={closeAddonModal}
+    <dialog
+      ref={dialogRef}
+      className="-translate-x-1/2 -translate-y-1/2 backdrop:backdrop-blur-lg bg-transparent left-1/2 top-1/2 w-3/4"
+      onClose={closeAddonModal}
     >
-      <div
-        className="z-20 bg-slate-900 border border-purple-300/20 rounded w-3/4 h-[88vh] max-h-[88vh] flex flex-col text-slate-400 max-sm:w-11/12 max-sm:h-[90vh] max-md:w-11/12 max-md:h-[90vh] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <section className="bg-slate-900 border border-purple-300/20 flex flex-col h-[88vh] max-h-[88vh] max-md:h-[90vh] max-md:w-11/12 max-sm:h-[90vh] max-sm:w-11/12 overflow-hidden rounded text-slate-400 ">
         <div class="flex-none p-5 pb-0 w-full relative">
           <button
             class="absolute top-5 right-5 cursor-pointer z-10"
@@ -81,7 +86,11 @@ export default function AddonModal({
               }}
             />
             <div class="leading-tight flex-1 min-w-0">
-              <h2 className="text-2xl font-bold font-purple-300">
+              <h2
+                className="text-2xl font-bold font-purple-300 focus:outline-none"
+                tabindex={-1}
+                autoFocus
+              >
                 {addon.name}
               </h2>
               {addon.authors.length != 0 && (
@@ -147,7 +156,7 @@ export default function AddonModal({
             />
           )}
         </div>
-        <section class="flex-none flex items-center justify-center gap-2 w-full p-5 pt-3 border-t border-purple-300/10">
+        <div class="flex-none flex items-center justify-center gap-2 w-full p-5 pt-3 border-t border-purple-300/10">
           {addon.links.downloads.length > 0 && (
             <div className="flex flex-col w-1/2">
               <LinkButton
@@ -213,8 +222,8 @@ export default function AddonModal({
               </svg>
             </a>
           )}
-        </section>
-      </div>
-    </section>
+        </div>
+      </section>
+    </dialog>
   );
 }
