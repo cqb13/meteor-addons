@@ -1,10 +1,12 @@
+import { filterAddons, type FilterOptions } from "../helpers/filterAddons";
+import { useState, useEffect, useMemo } from "preact/hooks";
 import AddonModal from "../components/AddonModal.tsx";
 import type { RoutableProps } from "preact-router";
-import { useState, useEffect } from "preact/hooks";
-import Dropdown from "../components/Dropdown.tsx";
+import Reverse from "../components/icons/Reverse";
 import type { FunctionalComponent } from "preact";
-import loadAddons from "../helpers/addonLoader";
+import Dropdown from "../components/Dropdown.tsx";
 import AddonCard from "../components/AddonCard";
+import loadAddons from "../helpers/addonLoader";
 import type Addon from "../helpers/addon";
 import Button from "../components/Button";
 import {
@@ -41,9 +43,10 @@ export function sortModeToString(sortMode: SortMode): string {
 
 const Home: FunctionalComponent<RoutableProps> = () => {
   const [addons, setAddons] = useState<Addon[]>([]);
-  const [visibleAddons, setVisibleAddons] = useState<Addon[]>([]);
   const [totalAddons, setTotalAddons] = useState<number>(0);
   const [allVersions, setAllVersions] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // filters
   const [searchValue, setSearchValue] = useState<string>("");
@@ -111,101 +114,41 @@ const Home: FunctionalComponent<RoutableProps> = () => {
 
       setTotalAddons(addons.length);
       setAddons(addons);
-    })();
+      setIsLoading(false);
+    })().catch((err) => {
+      setError(err.message || "Failed to load addons");
+      setIsLoading(false);
+    });
   }, []);
 
-  useEffect(() => {
-    updateVisibleAddons();
-  }, [
-    addons,
-    verifiedOnly,
-    featureSearch,
-    searchValue,
-    includeForks,
-    includeArchived,
-    onlyWithReleases,
-    selectedVersion,
-  ]);
+  const filterOptions = useMemo(
+    (): FilterOptions => ({
+      verifiedOnly,
+      includeForks,
+      includeArchived,
+      onlyWithReleases,
+      selectedVersion,
+      searchValue,
+      featureSearch,
+    }),
+    [
+      verifiedOnly,
+      includeForks,
+      includeArchived,
+      onlyWithReleases,
+      selectedVersion,
+      searchValue,
+      featureSearch,
+    ],
+  );
 
-  function updateVisibleAddons() {
-    const visible: Addon[] = [];
+  const visibleAddons = useMemo(() => {
+    return filterAddons(addons, filterOptions);
+  }, [addons, filterOptions]);
 
-    addons.forEach((addon: Addon) => {
-      const passesVerifiedCheck = !verifiedOnly || addon.verified;
-      const passesForkCheck = includeForks || !addon.repo.fork;
-      const passesArchivedCheck = includeArchived || !addon.repo.archived;
-      const passesReleaseCheck =
-        !onlyWithReleases || addon.links.downloads.length != 0;
-      const passesVersionCheck =
-        selectedVersion === "All" ||
-        addon.mc_version === selectedVersion ||
-        addon.custom.supported_versions?.includes(selectedVersion);
-
-      const lowerSearch = searchValue.toLowerCase();
-
-      const passesSearchCheck = featureSearch
-        ? (() => {
-            if (!addon.features) return false;
-
-            const features = addon.features;
-            if (lowerSearch.startsWith("hud:") && features.hud_elements) {
-              const query = lowerSearch.slice(4);
-              return features.hud_elements.some((e) =>
-                e.name.toLowerCase().includes(query),
-              );
-            } else if (lowerSearch.startsWith("module:") && features.modules) {
-              const query = lowerSearch.slice(7);
-              return features.modules.some((e) =>
-                e.name.toLowerCase().includes(query),
-              );
-            } else if (
-              lowerSearch.startsWith("command:") &&
-              features.commands
-            ) {
-              const query = lowerSearch.slice(8);
-              return features.commands.some((e) =>
-                e.name.toLowerCase().includes(query),
-              );
-            } else {
-              return (
-                features.modules?.some((e) =>
-                  e.name.toLowerCase().includes(lowerSearch),
-                ) ||
-                features.commands?.some((e) =>
-                  e.name.toLowerCase().includes(lowerSearch),
-                ) ||
-                features.hud_elements?.some((e) =>
-                  e.name.toLowerCase().includes(lowerSearch),
-                )
-              );
-            }
-          })()
-        : addon.name.toLowerCase().includes(lowerSearch) ||
-          addon.authors.some((author) =>
-            author.toLowerCase().includes(lowerSearch),
-          ) ||
-          (addon.custom.tags != null &&
-            addon.custom.tags.some((tag) =>
-              tag.toLowerCase().includes(lowerSearch),
-            )) ||
-          addon.repo.owner.toLowerCase().includes(lowerSearch);
-      if (
-        passesVerifiedCheck &&
-        passesForkCheck &&
-        passesArchivedCheck &&
-        passesReleaseCheck &&
-        passesVersionCheck &&
-        passesSearchCheck
-      ) {
-        visible.push(addon);
-      }
-    });
-
-    setVisibleAddons(visible);
-  }
-
-  function searchAddons(event: any) {
-    setSearchValue(event.target.value);
+  function searchAddons(event: Event) {
+    const target = event.target as HTMLInputElement;
+    setSearchValue(target.value);
   }
 
   function sortAddons(mode: SortMode) {
@@ -408,15 +351,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             onClick={reverseAddonList}
             class="flex gap-2 justify-center items-center bg-slate-950/50 p-2 rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out"
           >
-            <svg
-              width="800"
-              height="800"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-5 h-5 fill-purple-400"
-            >
-              <path d="M6.293 4.293a1 1 0 0 1 1.414 0l4 4a1 1 0 0 1-1.414 1.414L8 7.414V19a1 1 0 1 1-2 0V7.414L3.707 9.707a1 1 0 0 1-1.414-1.414zM16 16.586V5a1 1 0 1 1 2 0v11.586l2.293-2.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414z" />
-            </svg>
+            <Reverse style="w-5 h-5" />
             <p class="whitespace-nowrap">Reverse List</p>
           </button>
         </section>
@@ -434,16 +369,41 @@ const Home: FunctionalComponent<RoutableProps> = () => {
             </p>
           </div>
         </section>
-        <section class="flex gap-2 flex-wrap justify-center items-center w-full">
-          {visibleAddons?.map((addon: Addon, key: number) => (
-            <AddonCard
-              addon={addon}
-              key={key}
-              rank={key}
-              openAddonModal={openAddonModal}
-            />
-          ))}
-        </section>
+        {isLoading && (
+          <div class="flex justify-center items-center py-20">
+            <div class="animate-spin w-8 h-8 border-4 border-purple-300 border-t-transparent rounded-full"></div>
+          </div>
+        )}
+        {error && (
+          <div class="flex flex-col items-center py-20 text-red-400 w-1/4">
+            <p>Failed to load addons</p>
+            <p class="text-sm text-slate-400">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              class="bg-slate-950/50 p-1 mt-2 text-center rounded border cursor-pointer border-purple-300/20 hover:border-purple-300/50 active:border-purple-300/80 transition-all duration-300 ease-in-out w-1/2"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+        {!isLoading && !error && visibleAddons.length === 0 && (
+          <div class="flex flex-col items-center py-20 text-slate-400">
+            <p class="text-lg">No addons found</p>
+            <p class="text-sm">Try adjusting your filters or search</p>
+          </div>
+        )}
+        {!isLoading && !error && visibleAddons.length > 0 && (
+          <section class="flex gap-2 flex-wrap justify-center items-center w-full">
+            {visibleAddons?.map((addon: Addon, key: number) => (
+              <AddonCard
+                addon={addon}
+                key={`${addon.repo.owner}-${addon.repo.name}`}
+                rank={key}
+                openAddonModal={openAddonModal}
+              />
+            ))}
+          </section>
+        )}
       </main>
       <AddonModal
         addon={currentViewedAddon}
