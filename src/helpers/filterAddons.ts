@@ -78,7 +78,6 @@ export function passesFilters(addon: Addon, filters: FilterOptions): boolean {
         features.hud_elements?.some((e) => e.name.toLowerCase().includes(query))
       );
     } else {
-      // featureSearch is true but no prefix - search all features
       return (
         features.modules?.some((e) =>
           e.name.toLowerCase().includes(lowerSearch),
@@ -109,6 +108,45 @@ export function passesFilters(addon: Addon, filters: FilterOptions): boolean {
 
 export function filterAddons(addons: Addon[], filters: FilterOptions): Addon[] {
   return addons.filter((addon) => passesFilters(addon, filters));
+}
+
+export interface FilterState {
+  verifiedOnly: boolean;
+  includeForks: boolean;
+  includeArchived: boolean;
+  onlyWithReleases: boolean;
+  selectedVersion: string;
+}
+
+export function passesBaseFilters(addon: Addon, filters: FilterState): boolean {
+  const {
+    verifiedOnly,
+    includeForks,
+    includeArchived,
+    onlyWithReleases,
+    selectedVersion,
+  } = filters;
+
+  if (verifiedOnly && !addon.verified) return false;
+  if (!includeForks && addon.repo.fork) return false;
+  if (!includeArchived && addon.repo.archived) return false;
+  if (onlyWithReleases && addon.links.downloads.length === 0) return false;
+
+  if (selectedVersion !== "All") {
+    const versionMatch =
+      addon.mc_version === selectedVersion ||
+      addon.custom.supported_versions?.includes(selectedVersion);
+    if (!versionMatch) return false;
+  }
+
+  return true;
+}
+
+export function getFilteredAddons(
+  addons: Addon[],
+  filters: FilterState,
+): Addon[] {
+  return addons.filter((addon) => passesBaseFilters(addon, filters));
 }
 
 export function getActivePrefix(searchValue: string): string | null {

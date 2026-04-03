@@ -21,7 +21,9 @@ import {
 import {
   filterAddons,
   getActivePrefix,
+  getFilteredAddons,
   type FilterOptions,
+  type FilterState,
 } from "../helpers/filterAddons";
 
 export enum SortMode {
@@ -155,7 +157,33 @@ const Home: FunctionalComponent<RoutableProps> = () => {
     ],
   );
 
-  const suggestions = useSearchSuggestions(addons, searchValue, featureSearch);
+  const baseFilterState = useMemo(
+    (): FilterState => ({
+      verifiedOnly,
+      includeForks,
+      includeArchived,
+      onlyWithReleases,
+      selectedVersion,
+    }),
+    [
+      verifiedOnly,
+      includeForks,
+      includeArchived,
+      onlyWithReleases,
+      selectedVersion,
+    ],
+  );
+
+  const filteredAddons = useMemo(
+    () => getFilteredAddons(addons, baseFilterState),
+    [addons, baseFilterState],
+  );
+
+  const suggestions = useSearchSuggestions(
+    filteredAddons,
+    searchValue,
+    featureSearch,
+  );
 
   useEffect(() => {
     const prefix = getActivePrefix(searchValue);
@@ -216,30 +244,9 @@ const Home: FunctionalComponent<RoutableProps> = () => {
     if (suggestion.type === "hint") {
       setSearchValue(suggestion.value);
       setFeatureSearch(true);
-    } else if (suggestion.type === "addon") {
-      setSearchValue(suggestion.value);
-      setFeatureSearch(false);
-      setVerifiedOnly(false);
-      setIncludeForks(true);
-      setIncludeArchived(true);
-      setOnlyWithReleases(false);
-    } else if (suggestion.type === "author") {
-      setSearchValue(suggestion.value);
-      setFeatureSearch(false);
-      setVerifiedOnly(false);
-      setIncludeForks(true);
-    } else if (suggestion.type === "tag") {
-      setSearchValue(suggestion.value);
-      setFeatureSearch(false);
-      setVerifiedOnly(false);
-      setIncludeForks(true);
     } else if (suggestion.type === "feature") {
       setSearchValue(suggestion.value);
       setFeatureSearch(true);
-      setVerifiedOnly(false);
-      setIncludeForks(true);
-      setIncludeArchived(true);
-      setOnlyWithReleases(false);
     } else {
       setSearchValue(suggestion.value);
       setFeatureSearch(false);
