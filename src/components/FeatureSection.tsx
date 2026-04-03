@@ -13,6 +13,7 @@ export default function FeatureSection({
   const forHud = searchValue.toLowerCase().startsWith("hud:");
   const forModule = searchValue.toLowerCase().startsWith("module:");
   const forCommand = searchValue.toLowerCase().startsWith("command:");
+  const forFeature = searchValue.toLowerCase().startsWith("feature:");
   const [open, setOpen] = useState<string | null>(null);
 
   let actualSearch = searchValue;
@@ -22,6 +23,8 @@ export default function FeatureSection({
   } else if (forModule) {
     actualSearch = searchValue.slice(7);
   } else if (forCommand) {
+    actualSearch = searchValue.slice(8);
+  } else if (forFeature) {
     actualSearch = searchValue.slice(8);
   }
 
@@ -37,7 +40,7 @@ export default function FeatureSection({
                 features={features.modules}
                 featureSearch={featureSearch}
                 actualSearch={actualSearch}
-                forColumn={!(forHud || forCommand)}
+                forColumn={forFeature || !(forHud || forCommand)}
                 setOpen={setOpen}
                 open={open}
               />
@@ -51,7 +54,7 @@ export default function FeatureSection({
                 features={features.commands}
                 featureSearch={featureSearch}
                 actualSearch={actualSearch}
-                forColumn={!(forHud || forModule)}
+                forColumn={forFeature || !(forHud || forModule)}
                 setOpen={setOpen}
                 open={open}
               />
@@ -65,7 +68,7 @@ export default function FeatureSection({
                 features={features.hud_elements}
                 featureSearch={featureSearch}
                 actualSearch={actualSearch}
-                forColumn={!(forCommand || forModule)}
+                forColumn={forFeature || !(forCommand || forModule)}
                 setOpen={setOpen}
                 open={open}
               />

@@ -1,5 +1,4 @@
-import { filterAddons, type FilterOptions } from "../helpers/filterAddons";
-import { useState, useEffect, useMemo } from "preact/hooks";
+import { useState, useEffect, useMemo, useRef } from "preact/hooks";
 import AddonModal from "../components/AddonModal.tsx";
 import type { RoutableProps } from "preact-router";
 import Reverse from "../components/icons/Reverse";
@@ -8,12 +7,22 @@ import Dropdown from "../components/Dropdown.tsx";
 import AddonCard from "../components/AddonCard";
 import loadAddons from "../helpers/addonLoader";
 import type Addon from "../helpers/addon";
+import {
+  useSearchSuggestions,
+  type SearchSuggestion,
+} from "../hooks/useSearchSuggestions";
+import SearchSuggestions from "../components/SearchSuggestions";
 import Button from "../components/Button";
 import {
   parseVersion,
   compareParsedVersions,
   sortVersionsDescending,
 } from "../helpers/sortVersions";
+import {
+  filterAddons,
+  getActivePrefix,
+  type FilterOptions,
+} from "../helpers/filterAddons";
 
 export enum SortMode {
   Stars,
@@ -47,6 +56,10 @@ const Home: FunctionalComponent<RoutableProps> = () => {
   const [allVersions, setAllVersions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] =
+    useState<number>(-1);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // filters
   const [searchValue, setSearchValue] = useState<string>("");
@@ -142,6 +155,25 @@ const Home: FunctionalComponent<RoutableProps> = () => {
     ],
   );
 
+  const suggestions = useSearchSuggestions(addons, searchValue, featureSearch);
+
+  useEffect(() => {
+    const prefix = getActivePrefix(searchValue);
+    setFeatureSearch(prefix !== null);
+  }, [searchValue]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (showSuggestions) {
+        setShowSuggestions(false);
+        setSelectedSuggestionIndex(-1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [showSuggestions]);
+
   const visibleAddons = useMemo(() => {
     return filterAddons(addons, filterOptions);
   }, [addons, filterOptions]);
@@ -149,6 +181,79 @@ const Home: FunctionalComponent<RoutableProps> = () => {
   function searchAddons(event: Event) {
     const target = event.target as HTMLInputElement;
     setSearchValue(target.value);
+    setShowSuggestions(true);
+    setSelectedSuggestionIndex(-1);
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (!showSuggestions || suggestions.length === 0) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSelectedSuggestionIndex((prev) =>
+        prev < suggestions.length - 1 ? prev + 1 : 0,
+      );
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSelectedSuggestionIndex((prev) =>
+        prev > 0 ? prev - 1 : suggestions.length - 1,
+      );
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (selectedSuggestionIndex >= 0) {
+        handleSuggestionSelect(suggestions[selectedSuggestionIndex]);
+      }
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      setShowSuggestions(false);
+      setSelectedSuggestionIndex(-1);
+      searchInputRef.current?.blur();
+    }
+  }
+
+  function handleSuggestionSelect(suggestion: SearchSuggestion) {
+    setSelectedSuggestionIndex(-1);
+    if (suggestion.type === "hint") {
+      setSearchValue(suggestion.value);
+      setFeatureSearch(true);
+    } else if (suggestion.type === "addon") {
+      setSearchValue(suggestion.value);
+      setFeatureSearch(false);
+      setVerifiedOnly(false);
+      setIncludeForks(true);
+      setIncludeArchived(true);
+      setOnlyWithReleases(false);
+    } else if (suggestion.type === "author") {
+      setSearchValue(suggestion.value);
+      setFeatureSearch(false);
+      setVerifiedOnly(false);
+      setIncludeForks(true);
+    } else if (suggestion.type === "tag") {
+      setSearchValue(suggestion.value);
+      setFeatureSearch(false);
+      setVerifiedOnly(false);
+      setIncludeForks(true);
+    } else if (suggestion.type === "feature") {
+      setSearchValue(suggestion.value);
+      setFeatureSearch(true);
+      setVerifiedOnly(false);
+      setIncludeForks(true);
+      setIncludeArchived(true);
+      setOnlyWithReleases(false);
+    } else {
+      setSearchValue(suggestion.value);
+      setFeatureSearch(false);
+    }
+    setShowSuggestions(false);
+    searchInputRef.current?.blur();
+  }
+
+  function handleSearchFocus() {
+    setShowSuggestions(true);
+  }
+
+  function handleSearchBlur() {
+    setTimeout(() => setShowSuggestions(false), 150);
   }
 
   function sortAddons(mode: SortMode) {
@@ -276,32 +381,30 @@ const Home: FunctionalComponent<RoutableProps> = () => {
     document.body.style.overflow = "unset";
   }
 
-  function toggleFeatureSearch() {
-    setSearchValue("");
-    setFeatureSearch(!featureSearch);
-  }
-
   return (
     <>
       <main class="flex flex-col gap-2 items-center px-5 grow">
-        <section class="flex gap-2 w-11/12 max-sm:w-full relative">
-          <input
-            type="text"
-            placeholder={
-              featureSearch
-                ? "Search Features — Try hud:, module:, or command:"
-                : "Search addons, authors, and tags"
-            }
-            onInput={searchAddons}
-            value={searchValue}
-            class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full outline-none!"
-          />
-          <Button
-            text={` ${featureSearch ? "Addons" : "Features"}`}
-            action={toggleFeatureSearch}
-            active={false}
-            className="w-1/4!"
-          />
+        <section class="flex gap-2 w-11/12 max-sm:w-full">
+          <div class="relative flex-1">
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search addons, authors, tags — or: hud: module: command: feature:"
+              onInput={searchAddons}
+              onKeyDown={handleKeyDown}
+              onFocus={handleSearchFocus}
+              onBlur={handleSearchBlur}
+              value={searchValue}
+              class="bg-slate-950/50 p-2 rounded border border-purple-300/20 hover:border-purple-300/50 focus:border-purple-300/80 transition-all duration-300 ease-in-out w-full outline-none!"
+            />
+            {showSuggestions && suggestions.length > 0 && (
+              <SearchSuggestions
+                suggestions={suggestions}
+                selectedIndex={selectedSuggestionIndex}
+                onSelect={handleSuggestionSelect}
+              />
+            )}
+          </div>
         </section>
         <section class="flex gap-2 w-11/12 max-md:flex-wrap max-sm:w-full">
           <Button

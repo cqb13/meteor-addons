@@ -10,6 +10,15 @@ export interface FilterOptions {
   featureSearch: boolean;
 }
 
+function getActiveFeaturePrefix(searchValue: string): string | null {
+  const lower = searchValue.toLowerCase();
+  if (lower.startsWith("hud:")) return "hud:";
+  if (lower.startsWith("module:")) return "module:";
+  if (lower.startsWith("command:")) return "command:";
+  if (lower.startsWith("feature:")) return "feature:";
+  return null;
+}
+
 export function passesFilters(addon: Addon, filters: FilterOptions): boolean {
   const {
     verifiedOnly,
@@ -33,26 +42,43 @@ export function passesFilters(addon: Addon, filters: FilterOptions): boolean {
     if (!versionMatch) return false;
   }
 
-  if (featureSearch) {
+  const activePrefix = getActiveFeaturePrefix(searchValue);
+  const isFeatureMode = featureSearch || activePrefix !== null;
+
+  if (isFeatureMode) {
     if (!addon.features) return false;
 
     const lowerSearch = searchValue.toLowerCase();
     const features = addon.features;
 
-    if (lowerSearch.startsWith("hud:") && features.hud_elements) {
+    if (activePrefix === "hud:") {
       const query = lowerSearch.slice(4);
-      return features.hud_elements.some((e) =>
-        e.name.toLowerCase().includes(query),
+      return (
+        features.hud_elements?.some((e) =>
+          e.name.toLowerCase().includes(query),
+        ) || false
       );
-    } else if (lowerSearch.startsWith("module:") && features.modules) {
+    } else if (activePrefix === "module:") {
       const query = lowerSearch.slice(7);
-      return features.modules.some((e) => e.name.toLowerCase().includes(query));
-    } else if (lowerSearch.startsWith("command:") && features.commands) {
+      return (
+        features.modules?.some((e) => e.name.toLowerCase().includes(query)) ||
+        false
+      );
+    } else if (activePrefix === "command:") {
       const query = lowerSearch.slice(8);
-      return features.commands.some((e) =>
-        e.name.toLowerCase().includes(query),
+      return (
+        features.commands?.some((e) => e.name.toLowerCase().includes(query)) ||
+        false
+      );
+    } else if (activePrefix === "feature:") {
+      const query = lowerSearch.slice(8);
+      return (
+        features.modules?.some((e) => e.name.toLowerCase().includes(query)) ||
+        features.commands?.some((e) => e.name.toLowerCase().includes(query)) ||
+        features.hud_elements?.some((e) => e.name.toLowerCase().includes(query))
       );
     } else {
+      // featureSearch is true but no prefix - search all features
       return (
         features.modules?.some((e) =>
           e.name.toLowerCase().includes(lowerSearch),
@@ -83,4 +109,8 @@ export function passesFilters(addon: Addon, filters: FilterOptions): boolean {
 
 export function filterAddons(addons: Addon[], filters: FilterOptions): Addon[] {
   return addons.filter((addon) => passesFilters(addon, filters));
+}
+
+export function getActivePrefix(searchValue: string): string | null {
+  return getActiveFeaturePrefix(searchValue);
 }
