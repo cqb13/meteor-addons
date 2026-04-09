@@ -122,6 +122,10 @@ const About: FunctionalComponent<RoutableProps> = () => {
                   Addons that copy modules from other addons without proper
                   credit and meaningful changes
                 </li>
+                <li>
+                  Addons that appear vibe coded will not be verified for that
+                  reason if they have any issues
+                </li>
               </ul>
             </article>
             <p class="italic">
