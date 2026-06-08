@@ -144,7 +144,7 @@ function FeatureColumn({
           {features.map((feature: Feature, key: number) => (
             <li
               key={key}
-              className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && forColumn ? "bg-purple-300/10 rounded px-1" : ""} cursor-pointer`}
+              className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && forColumn ? "bg-purple-300/10 rounded px-1" : ""} ${feature.description != "" ? "cursor-pointer" : ""}`}
               onClick={() =>
                 setOpen(open === feature.name ? null : feature.name)
               }
