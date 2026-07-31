@@ -179,11 +179,7 @@ export default function AddonModal({
                 className="w-full"
               />
               <a
-                href={
-                  addon.links.latest_release
-                    ? addon.links.latest_release
-                    : addon.links.downloads[0]
-                }
+                href={addon.links.latest_release || addon.links.downloads[0]}
                 class="text-purple-300 text-xs font-medium cursor-pointer hover:text-purple-400 transition-all ease-in-out duration-300"
               >
                 Download last recorded release

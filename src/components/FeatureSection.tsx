@@ -1,5 +1,9 @@
 import type { Feature, Features } from "../helpers/addon";
-import { useState } from "preact/hooks";
+
+const HUD_PREFIX = "hud:";
+const MODULE_PREFIX = "module:";
+const COMMAND_PREFIX = "command:";
+const FEATURE_PREFIX = "feature:";
 
 export default function FeatureSection({
   features,
@@ -10,22 +14,22 @@ export default function FeatureSection({
   featureSearch: boolean;
   searchValue: String;
 }) {
-  const forHud = searchValue.toLowerCase().startsWith("hud:");
-  const forModule = searchValue.toLowerCase().startsWith("module:");
-  const forCommand = searchValue.toLowerCase().startsWith("command:");
-  const forFeature = searchValue.toLowerCase().startsWith("feature:");
-  const [open, setOpen] = useState<string | null>(null);
+  const searchValueLowered = searchValue.toLowerCase();
+  const forHud = searchValueLowered.startsWith(HUD_PREFIX);
+  const forModule = searchValueLowered.startsWith(MODULE_PREFIX);
+  const forCommand = searchValueLowered.startsWith(COMMAND_PREFIX);
+  const forFeature = searchValueLowered.startsWith(FEATURE_PREFIX);
 
   let actualSearch = searchValue;
 
   if (forHud) {
-    actualSearch = searchValue.slice(4);
+    actualSearch = searchValue.slice(HUD_PREFIX.length);
   } else if (forModule) {
-    actualSearch = searchValue.slice(7);
+    actualSearch = searchValue.slice(MODULE_PREFIX.length);
   } else if (forCommand) {
-    actualSearch = searchValue.slice(8);
+    actualSearch = searchValue.slice(COMMAND_PREFIX.length);
   } else if (forFeature) {
-    actualSearch = searchValue.slice(8);
+    actualSearch = searchValue.slice(FEATURE_PREFIX.length);
   }
 
   return (
@@ -33,58 +37,42 @@ export default function FeatureSection({
       <h3 className="text-purple-300 font-bold text-xl">Features</h3>
       <div className="w-full flex flex-col gap-2">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-          {features.modules && features.modules.length > 0 && (
-            <>
-              <FeatureColumn
-                name="Modules"
-                features={features.modules}
-                featureSearch={featureSearch}
-                actualSearch={actualSearch}
-                forColumn={forFeature || !(forHud || forCommand)}
-                setOpen={setOpen}
-                open={open}
-              />
-            </>
+          {features.modules?.length > 0 && (
+            <FeatureColumn
+              name="Modules"
+              features={features.modules}
+              featureSearch={featureSearch}
+              actualSearch={actualSearch}
+              forColumn={forFeature || !(forHud || forCommand)}
+            />
           )}
 
-          {features.commands && features.commands.length > 0 && (
-            <>
-              <FeatureColumn
-                name="Commands"
-                features={features.commands}
-                featureSearch={featureSearch}
-                actualSearch={actualSearch}
-                forColumn={forFeature || !(forHud || forModule)}
-                setOpen={setOpen}
-                open={open}
-              />
-            </>
+          {features.commands?.length > 0 && (
+            <FeatureColumn
+              name="Commands"
+              features={features.commands}
+              featureSearch={featureSearch}
+              actualSearch={actualSearch}
+              forColumn={forFeature || !(forHud || forModule)}
+            />
           )}
 
-          {features.hud_elements && features.hud_elements.length > 0 && (
-            <>
-              <FeatureColumn
-                name="HUD Elements"
-                features={features.hud_elements}
-                featureSearch={featureSearch}
-                actualSearch={actualSearch}
-                forColumn={forFeature || !(forCommand || forModule)}
-                setOpen={setOpen}
-                open={open}
-              />
-            </>
+          {features.hud_elements?.length > 0 && (
+            <FeatureColumn
+              name="HUD Elements"
+              features={features.hud_elements}
+              featureSearch={featureSearch}
+              actualSearch={actualSearch}
+              forColumn={forFeature || !(forCommand || forModule)}
+            />
           )}
         </div>
         <div className="flex gap-2 w-full">
-          {features.tabs && features.tabs.length > 0 && (
-            <>
-              <StringFeatureColumn name="Tabs" features={features.tabs} />
-            </>
+          {features.tabs?.length > 0 && (
+            <StringFeatureColumn name="Tabs" features={features.tabs} />
           )}
-          {features.themes && features.themes.length > 0 && (
-            <>
-              <StringFeatureColumn name="Themes" features={features.themes} />
-            </>
+          {features.themes?.length > 0 && (
+            <StringFeatureColumn name="Themes" features={features.themes} />
           )}
         </div>
       </div>
@@ -123,16 +111,12 @@ function FeatureColumn({
   featureSearch,
   actualSearch,
   forColumn,
-  setOpen,
-  open,
 }: {
   name: string;
   features: Feature[];
   featureSearch: boolean;
   actualSearch: String;
   forColumn: boolean;
-  setOpen: (value: string | null) => void;
-  open: string | null;
 }) {
   return (
     <div className="flex flex-col border border-purple-300/20 rounded bg-slate-950/30 p-3">
@@ -144,17 +128,19 @@ function FeatureColumn({
           {features.map((feature: Feature, key: number) => (
             <li
               key={key}
-              className={`${featureSearch == true && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && forColumn ? "bg-purple-300/10 rounded px-1" : ""} ${feature.description != "" ? "cursor-pointer" : ""}`}
-              onClick={() =>
-                setOpen(open === feature.name ? null : feature.name)
-              }
+              className={`${featureSearch && feature.name.toLowerCase().includes(actualSearch.toLowerCase()) && actualSearch != "" && forColumn ? "bg-purple-300/10 rounded px-1" : ""} ${feature.description != "" ? "cursor-pointer" : ""}`}
             >
-              <p className="font-medium">{feature.name}</p>
-
-              {open === feature.name && feature.description && (
-                <p className="mt-1 text-xs text-gray-400">
-                  {feature.description}
-                </p>
+              {feature.description ? (
+                <details name="feature">
+                  <summary className="font-medium list-none">
+                    {feature.name}
+                  </summary>
+                  <p className="mt-1 text-xs text-gray-400">
+                    {feature.description}
+                  </p>
+                </details>
+              ) : (
+                <p className="font-medium">{feature.name}</p>
               )}
             </li>
           ))}

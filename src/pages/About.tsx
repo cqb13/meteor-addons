@@ -140,7 +140,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
               It may take some time to verify your addon. You will be notified
               when a decision is made.
             </p>
-            <p class="itlaic">
+            <p class="italic">
               Please only submit addons that you have created.
             </p>
           </article>
@@ -217,7 +217,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
                 meteor-addon-list.json
               </p>{" "}
               in the root directory of your addon, and add the fields you wish
-              to overide.
+              to override.
             </p>
             <section className="ml-5 p-5 bg-slate-950 border border-purple-300/20 rounded">
               <pre className="font-mono text-purple-200 whitespace-pre max-sm:whitespace-pre-wrap wrap-break-words">
