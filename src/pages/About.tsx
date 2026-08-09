@@ -1,6 +1,7 @@
 import type { RoutableProps } from "preact-router";
 import type { FunctionalComponent } from "preact";
 import FaqCard from "../components/FaqCard";
+import useMeta from "../hooks/useMeta.ts";
 
 const supportedTags: string[] = [
   "PvP",
@@ -26,6 +27,13 @@ function Tag({ tag }: { tag: string }) {
 }
 
 const About: FunctionalComponent<RoutableProps> = () => {
+  useMeta({
+    title: "About — Meteor Addons",
+    description:
+      "A list of Meteor Client Addons automatically scraped from GitHub. Designed to make discovering and downloading Meteor addons as seamless as possible.",
+    url: "https://meteoraddons.com/about",
+  });
+
   return (
     <main class="flex flex-col gap-5 items-center px-5 grow">
       <section class="w-3/5 max-lg:w-4/5 max-md:w-full">

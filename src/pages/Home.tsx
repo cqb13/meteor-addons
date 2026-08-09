@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo, useRef } from "preact/hooks";
+import { route, type RoutableProps } from "preact-router";
 import AddonModal from "../components/AddonModal.tsx";
-import type { RoutableProps } from "preact-router";
+import Dropdown from "../components/Dropdown.tsx";
 import Reverse from "../components/icons/Reverse";
 import type { FunctionalComponent } from "preact";
-import Dropdown from "../components/Dropdown.tsx";
 import AddonCard from "../components/AddonCard";
 import loadAddons from "../helpers/addonLoader";
 import type Addon from "../helpers/addon";
@@ -12,6 +12,8 @@ import {
   type SearchSuggestion,
 } from "../hooks/useSearchSuggestions";
 import SearchSuggestions from "../components/SearchSuggestions";
+import { setJsonLd, removeJsonLd } from "../helpers/jsonLd.ts";
+import useMeta from "../hooks/useMeta.ts";
 import Button from "../components/Button";
 import {
   parseVersion,
@@ -52,7 +54,11 @@ export function sortModeToString(sortMode: SortMode): string {
   }
 }
 
-const Home: FunctionalComponent<RoutableProps> = () => {
+type HomeProps = RoutableProps & { owner?: string; name?: string };
+
+const Home: FunctionalComponent<HomeProps> = (props) => {
+  const routeOwner = props.owner;
+  const routeName = props.name;
   const [addons, setAddons] = useState<Addon[]>([]);
   const [totalAddons, setTotalAddons] = useState<number>(0);
   const [allVersions, setAllVersions] = useState<string[]>([]);
@@ -62,9 +68,15 @@ const Home: FunctionalComponent<RoutableProps> = () => {
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] =
     useState<number>(-1);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [currentViewedAddon, setCurrentViewedAddon] = useState<Addon | null>(
+    null,
+  );
+  const [notFound, setNotFound] = useState<boolean>(false);
 
   // filters
-  const [searchValue, setSearchValue] = useState<string>("");
+  const initialSearch =
+    new URLSearchParams(window.location.search).get("q") ?? "";
+  const [searchValue, setSearchValue] = useState<string>(initialSearch);
   const [featureSearch, setFeatureSearch] = useState<boolean>(false);
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(true);
   const [includeArchived, setIncludeArchived] = useState<boolean>(false);
@@ -74,23 +86,73 @@ const Home: FunctionalComponent<RoutableProps> = () => {
 
   // Sorting
   const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
-  const [currentViewedAddon, setCurrentViewedAddon] = useState<Addon | null>(
-    null,
-  );
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const addonParam = params.get("addon");
-    if (addonParam && addons.length > 0) {
-      const [owner, repo] = addonParam.split("/");
+    if (routeOwner && routeName) {
       const match = addons.find(
-        (a) => a.repo.owner === owner && a.repo.name === repo,
+        (a) => a.repo.owner === routeOwner && a.repo.name === routeName,
       );
       if (match) {
-        openAddonModal(match);
+        setCurrentViewedAddon(match);
+        setNotFound(false);
+      } else if (addons.length > 0) {
+        setCurrentViewedAddon(null);
+        setNotFound(true);
       }
+    } else {
+      setCurrentViewedAddon(null);
+      setNotFound(false);
     }
-  }, [addons]);
+  }, [routeOwner, routeName, addons]);
+
+  useEffect(() => {
+    if (currentViewedAddon || notFound) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "unset";
+      };
+    }
+  }, [currentViewedAddon, notFound]);
+
+  const currentAddonUrl = currentViewedAddon
+    ? `https://meteoraddons.com/addon/${currentViewedAddon.repo.owner}/${currentViewedAddon.repo.name}`
+    : undefined;
+
+  useMeta({
+    title: currentViewedAddon
+      ? `${currentViewedAddon.name} — Meteor Addon List`
+      : "Meteor Addons",
+    description: currentViewedAddon
+      ? currentViewedAddon.custom.description || currentViewedAddon.description
+      : undefined,
+    url: currentAddonUrl,
+    ogTitle: currentViewedAddon?.name,
+  });
+
+  useEffect(() => {
+    if (currentViewedAddon) {
+      setJsonLd("addon-schema", {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: currentViewedAddon.name,
+        url: currentAddonUrl,
+        description:
+          currentViewedAddon.custom.description ||
+          currentViewedAddon.description,
+        author: {
+          "@type": "Organization",
+          name: currentViewedAddon.repo.owner,
+          url: `https://github.com/${currentViewedAddon.repo.owner}`,
+        },
+        codeRepository: `https://github.com/${currentViewedAddon.repo.owner}/${currentViewedAddon.repo.name}`,
+        applicationCategory: "GameApplication",
+        operatingSystem: "Minecraft (Java Edition)",
+        dateModified: currentViewedAddon.repo.last_update,
+      });
+    } else {
+      removeJsonLd("addon-schema");
+    }
+  }, [currentViewedAddon]);
 
   useEffect(() => {
     (async () => {
@@ -130,6 +192,32 @@ const Home: FunctionalComponent<RoutableProps> = () => {
       setTotalAddons(addons.length);
       setAddons(addons);
       setIsLoading(false);
+
+      const params = new URLSearchParams(window.location.search);
+      const addonParam = params.get("addon");
+      if (addonParam) {
+        const [owner, repo] = addonParam.split("/");
+        if (owner && repo) {
+          route(`/addon/${owner}/${repo}`, true);
+        }
+      }
+
+      setJsonLd("home-addons", {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Meteor Client Addons",
+        itemListElement: addons.slice(0, 30).map((a: Addon, i: number) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          item: {
+            "@type": "SoftwareApplication",
+            name: a.name,
+            url: `https://meteoraddons.com/addon/${a.repo.owner}/${a.repo.name}`,
+            description: a.custom.description || a.description,
+            author: { "@type": "Organization", name: a.repo.owner },
+          },
+        })),
+      });
     })().catch((err) => {
       setError(err.message || "Failed to load addons");
       setIsLoading(false);
@@ -364,28 +452,8 @@ const Home: FunctionalComponent<RoutableProps> = () => {
     setAddons(reversedAddons);
   }
 
-  function openAddonModal(addon: Addon) {
-    disableScrolling();
-    setCurrentViewedAddon(addon);
-    const url = new URL(window.location.href);
-    url.searchParams.set("addon", `${addon.repo.owner}/${addon.repo.name}`);
-    window.history.pushState({}, document.title, url);
-  }
-
   function closeAddonModal() {
-    enableScrolling();
-    setCurrentViewedAddon(null);
-    const url = new URL(window.location.href);
-    url.searchParams.delete("addon");
-    window.history.replaceState({}, document.title, url.pathname + url.search);
-  }
-
-  function disableScrolling() {
-    document.body.style.overflow = "hidden";
-  }
-
-  function enableScrolling() {
-    document.body.style.overflow = "unset";
+    route("/", true);
   }
 
   return (
@@ -509,7 +577,6 @@ const Home: FunctionalComponent<RoutableProps> = () => {
                 addon={addon}
                 key={`${addon.repo.owner}-${addon.repo.name}`}
                 rank={key}
-                openAddonModal={openAddonModal}
               />
             ))}
           </section>
@@ -517,6 +584,7 @@ const Home: FunctionalComponent<RoutableProps> = () => {
       </main>
       <AddonModal
         addon={currentViewedAddon}
+        notFound={notFound}
         featureSearch={featureSearch}
         searchValue={searchValue}
         closeAddonModal={closeAddonModal}

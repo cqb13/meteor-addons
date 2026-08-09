@@ -1,5 +1,5 @@
 {
-  "name": "Meteor Addon List",
+  "name": "Meteor Addons",
   "short_name": "Meteor Addons",
   "icons": [
     {
@@ -19,4 +19,3 @@
   "background_color": "#000000",
   "display": "standalone"
 }
-

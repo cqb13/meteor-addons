@@ -1,26 +1,23 @@
 import { useImageFallback } from "../hooks/useImageFallback.ts";
 import pickVersion from "../helpers/pickVersion.ts";
 import formatList from "../helpers/formatList.ts";
-import Verified from "./icons/Verified.tsx";
 import Archived from "./icons/Archived.tsx";
 import Download from "./icons/Download.tsx";
+import Verified from "./icons/Verified.tsx";
 import type Addon from "../helpers/addon";
-import Warning from "./icons/Warning.tsx";
+import LinkButton from "./LinkButton.tsx";
 import Github from "./icons/Github.tsx";
 import Fork from "./icons/Fork.tsx";
 import Star from "./icons/Star.tsx";
-import Button from "./Button.tsx";
 
 const DEFAULT_ICON = "/default-addon-icon.webp";
 
 export default function AddonCard({
   addon,
   rank,
-  openAddonModal,
 }: {
   addon: Addon;
   rank: number;
-  openAddonModal: (addon: Addon) => void;
 }) {
   const iconSrc = addon.custom.icon || addon.links.icon || DEFAULT_ICON;
   const { handleError } = useImageFallback(iconSrc);
@@ -39,7 +36,7 @@ export default function AddonCard({
             onError={handleError}
           />
           <div class="leading-tight flex-1 min-w-0">
-            <p class="font-bold text-lg">{addon.name}</p>
+            <h2 class="font-bold text-lg">{addon.name}</h2>
             {addon.authors.length > 0 && (
               <p class="whitespace-nowrap overflow-hidden text-ellipsis">
                 By {formatList(addon.authors)}
@@ -87,16 +84,15 @@ export default function AddonCard({
           </div>
           <div class="flex gap-2">
             {addon.verified && <Verified style="h-5 w-5" />}
-            {!addon.verified && false && <Warning style="h-5 w-5" />}
             {addon.repo.archived && <Archived style="w-5 h-5" />}
             {addon.repo.fork && <Fork style="w-5 h-5" />}
           </div>
         </div>
         <div class="flex gap-2 items-center justify-between">
-          <Button
+          <LinkButton
             text="View More"
-            action={() => openAddonModal(addon)}
-            active={false}
+            destination={`/addon/${addon.repo.owner}/${addon.repo.name}`}
+            className="w-full"
           />
           {addon.links.github != "" && (
             <a href={addon.links.github} target="_blank">

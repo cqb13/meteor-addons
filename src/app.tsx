@@ -5,6 +5,7 @@ import { useState, useEffect } from "preact/hooks";
 import Github from "./components/icons/Github.tsx";
 import KoFi from "./components/icons/KoFi.tsx";
 import NavLink from "./components/NavLink.tsx";
+import NotFound from "./pages/NotFound.tsx";
 import About from "./pages/About.tsx";
 import Home from "./pages/Home.tsx";
 import Router from "preact-router";
@@ -49,7 +50,9 @@ export function App() {
         </header>
         <Router>
           <Home path="/" />
+          <Home path="/addon/:owner/:name" />
           <About path="/about" />
+          <NotFound default />
         </Router>
         <footer class="text-sm p-4 w-full flex justify-between">
           <a
