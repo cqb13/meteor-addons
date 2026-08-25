@@ -29,9 +29,12 @@ export default async function handler(_req: unknown, res: any) {
     if (!res2.ok) throw new Error(`addons fetch failed: ${res2.status}`);
     const addons = await res2.json();
     for (const addon of addons) {
+      if (!addon.verified) {
+        continue;
+      }
       urls.push({
         loc: `${SITE_URL}/addon/${addon.repo.owner}/${addon.repo.name}`,
-        changefreq: "daily",
+        changefreq: "weekly",
         priority: "0.8",
       });
     }
