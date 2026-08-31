@@ -130,10 +130,7 @@ const About: FunctionalComponent<RoutableProps> = () => {
                   Addons that copy modules from other addons without proper
                   credit and meaningful changes
                 </li>
-                <li>
-                  Addons that appear vibe coded will not be verified for that
-                  reason if they have any issues
-                </li>
+                <li>Addons that appear vibe coded may not be verified</li>
                 <li>
                   Addons that fail to be picked up by the scanner will not be
                   verified. The scanner will successfully find all addons that
