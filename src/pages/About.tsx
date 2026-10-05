@@ -16,6 +16,7 @@ const supportedTags: string[] = [
   "Exploit",
   "Fun",
   "Automation",
+  "Printer",
 ];
 
 function Tag({ tag }: { tag: string }) {
