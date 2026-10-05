@@ -1,5 +1,12 @@
 import { useMemo } from "preact/hooks";
 import type Addon from "../helpers/addon";
+import {
+  COMMAND_PREFIX,
+  FEATURE_PREFIX,
+  HUD_PREFIX,
+  MODULE_PREFIX,
+  parseSearchQuery,
+} from "../helpers/searchHelpers";
 
 export interface SearchSuggestion {
   type: "addon" | "author" | "tag" | "hint" | "feature";
@@ -9,24 +16,29 @@ export interface SearchSuggestion {
 }
 
 const FEATURE_HINTS = [
-  { type: "hint" as const, value: "hud:", label: "hud:", prefix: "hud:" },
   {
     type: "hint" as const,
-    value: "module:",
-    label: "module:",
-    prefix: "module:",
+    value: HUD_PREFIX,
+    label: HUD_PREFIX,
+    prefix: HUD_PREFIX,
   },
   {
     type: "hint" as const,
-    value: "command:",
-    label: "command:",
-    prefix: "command:",
+    value: MODULE_PREFIX,
+    label: MODULE_PREFIX,
+    prefix: MODULE_PREFIX,
   },
   {
     type: "hint" as const,
-    value: "feature:",
-    label: "feature:",
-    prefix: "feature:",
+    value: COMMAND_PREFIX,
+    label: COMMAND_PREFIX,
+    prefix: COMMAND_PREFIX,
+  },
+  {
+    type: "hint" as const,
+    value: FEATURE_PREFIX,
+    label: FEATURE_PREFIX,
+    prefix: FEATURE_PREFIX,
   },
 ];
 
@@ -55,24 +67,9 @@ export function useSearchSuggestions(
     );
     suggestions.push(...matchingHints);
 
-    const specificPrefixes = ["hud:", "module:", "command:"];
-    const hasSpecificPrefix = specificPrefixes.some((p) => query.startsWith(p));
-    const hasFeaturePrefix = query.startsWith("feature:");
-
-    const isFeatureMode =
-      featureSearch || hasSpecificPrefix || hasFeaturePrefix;
-
-    // Determine active prefix to prepend to feature suggestions
-    let activePrefix = "";
-    if (hasFeaturePrefix) {
-      activePrefix = "feature:";
-    } else if (query.startsWith("hud:")) {
-      activePrefix = "hud:";
-    } else if (query.startsWith("module:")) {
-      activePrefix = "module:";
-    } else if (query.startsWith("command:")) {
-      activePrefix = "command:";
-    }
+    const { prefix, query: searchQuery } = parseSearchQuery(query);
+    const isFeatureMode = featureSearch || prefix !== null;
+    const activePrefix = prefix || "";
 
     if (!isFeatureMode) {
       const matchingAddons = addons
@@ -107,41 +104,24 @@ export function useSearchSuggestions(
     }
 
     if (isFeatureMode) {
-      let searchQuery = query;
-      let currentPrefix: string | null = null;
-
-      if (hasFeaturePrefix) {
-        searchQuery = query.slice(8);
-      } else if (hasSpecificPrefix) {
-        currentPrefix =
-          specificPrefixes.find((p) => query.startsWith(p)) || null;
-        if (currentPrefix) {
-          searchQuery = query.slice(currentPrefix.length);
-        }
-      }
-
       const seenFeatures = new Set<string>();
+      const lowerSearchQuery = searchQuery.toLowerCase();
+
+      const shouldSearchFeatureType = (featurePrefix: string): boolean =>
+        prefix === FEATURE_PREFIX ||
+        prefix === featurePrefix ||
+        prefix === null;
 
       addons.forEach((addon) => {
         if (!addon.features) return;
 
-        // if using specific prefix or generic feature prefix searching features.
-        const searchModules =
-          hasFeaturePrefix ||
-          currentPrefix === "module:" ||
-          (!currentPrefix && !hasSpecificPrefix);
-        const searchCommands =
-          hasFeaturePrefix ||
-          currentPrefix === "command:" ||
-          (!currentPrefix && !hasSpecificPrefix);
-        const searchHud =
-          hasFeaturePrefix ||
-          currentPrefix === "hud:" ||
-          (!currentPrefix && !hasSpecificPrefix);
+        const searchModules = shouldSearchFeatureType(MODULE_PREFIX);
+        const searchCommands = shouldSearchFeatureType(COMMAND_PREFIX);
+        const searchHud = shouldSearchFeatureType(HUD_PREFIX);
 
         if (searchModules && addon.features.modules) {
           addon.features.modules
-            .filter((e) => e.name.toLowerCase().includes(searchQuery))
+            .filter((e) => e.name.toLowerCase().includes(lowerSearchQuery))
             .slice(0, 2)
             .forEach((e) => {
               if (!seenFeatures.has(e.name)) {
@@ -158,7 +138,7 @@ export function useSearchSuggestions(
 
         if (searchCommands && addon.features.commands) {
           addon.features.commands
-            .filter((e) => e.name.toLowerCase().includes(searchQuery))
+            .filter((e) => e.name.toLowerCase().includes(lowerSearchQuery))
             .slice(0, 2)
             .forEach((e) => {
               if (!seenFeatures.has(e.name)) {
@@ -175,7 +155,7 @@ export function useSearchSuggestions(
 
         if (searchHud && addon.features.hud_elements) {
           addon.features.hud_elements
-            .filter((e) => e.name.toLowerCase().includes(searchQuery))
+            .filter((e) => e.name.toLowerCase().includes(lowerSearchQuery))
             .slice(0, 2)
             .forEach((e) => {
               if (!seenFeatures.has(e.name)) {

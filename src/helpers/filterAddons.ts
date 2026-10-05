@@ -1,4 +1,11 @@
 import type Addon from "./addon";
+import {
+  COMMAND_PREFIX,
+  FEATURE_PREFIX,
+  HUD_PREFIX,
+  MODULE_PREFIX,
+  parseSearchQuery,
+} from "./searchHelpers";
 
 export interface FilterOptions {
   verifiedOnly: boolean;
@@ -8,15 +15,6 @@ export interface FilterOptions {
   selectedVersion: string;
   searchValue: string;
   featureSearch: boolean;
-}
-
-function getActiveFeaturePrefix(searchValue: string): string | null {
-  const lower = searchValue.toLowerCase();
-  if (lower.startsWith("hud:")) return "hud:";
-  if (lower.startsWith("module:")) return "module:";
-  if (lower.startsWith("command:")) return "command:";
-  if (lower.startsWith("feature:")) return "feature:";
-  return null;
 }
 
 export function passesFilters(addon: Addon, filters: FilterOptions): boolean {
@@ -42,53 +40,63 @@ export function passesFilters(addon: Addon, filters: FilterOptions): boolean {
     if (!versionMatch) return false;
   }
 
-  const activePrefix = getActiveFeaturePrefix(searchValue);
-  const isFeatureMode = featureSearch || activePrefix !== null;
+  const { prefix, query } = parseSearchQuery(searchValue);
+  const isFeatureMode = featureSearch || prefix !== null;
 
   if (isFeatureMode) {
     if (!addon.features) return false;
 
-    const lowerSearch = searchValue.toLowerCase();
+    const lowerQuery = query.toLowerCase();
     const features = addon.features;
 
-    if (activePrefix === "hud:") {
-      const query = lowerSearch.slice(4);
-      return (
-        features.hud_elements?.some((e) =>
-          e.name.toLowerCase().includes(query),
-        ) || false
-      );
-    } else if (activePrefix === "module:") {
-      const query = lowerSearch.slice(7);
-      return (
-        features.modules?.some((e) => e.name.toLowerCase().includes(query)) ||
-        false
-      );
-    } else if (activePrefix === "command:") {
-      const query = lowerSearch.slice(8);
-      return (
-        features.commands?.some((e) => e.name.toLowerCase().includes(query)) ||
-        false
-      );
-    } else if (activePrefix === "feature:") {
-      const query = lowerSearch.slice(8);
-      return (
-        features.modules?.some((e) => e.name.toLowerCase().includes(query)) ||
-        features.commands?.some((e) => e.name.toLowerCase().includes(query)) ||
-        features.hud_elements?.some((e) => e.name.toLowerCase().includes(query))
-      );
-    } else {
-      return (
-        features.modules?.some((e) =>
-          e.name.toLowerCase().includes(lowerSearch),
-        ) ||
-        features.commands?.some((e) =>
-          e.name.toLowerCase().includes(lowerSearch),
-        ) ||
-        features.hud_elements?.some((e) =>
-          e.name.toLowerCase().includes(lowerSearch),
-        )
-      );
+    switch (prefix) {
+      case HUD_PREFIX: {
+        return (
+          features.hud_elements?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          ) || false
+        );
+      }
+      case MODULE_PREFIX: {
+        return (
+          features.modules?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          ) || false
+        );
+      }
+      case COMMAND_PREFIX: {
+        return (
+          features.commands?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          ) || false
+        );
+      }
+      case FEATURE_PREFIX: {
+        return (
+          features.modules?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          ) ||
+          features.commands?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          ) ||
+          features.hud_elements?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          )
+        );
+      }
+      default: {
+        return (
+          features.modules?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          ) ||
+          features.commands?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          ) ||
+          features.hud_elements?.some((e) =>
+            e.name.toLowerCase().includes(lowerQuery),
+          )
+        );
+      }
     }
   } else {
     const lowerSearch = searchValue.toLowerCase();
@@ -150,5 +158,5 @@ export function getFilteredAddons(
 }
 
 export function getActivePrefix(searchValue: string): string | null {
-  return getActiveFeaturePrefix(searchValue);
+  return parseSearchQuery(searchValue).prefix;
 }
