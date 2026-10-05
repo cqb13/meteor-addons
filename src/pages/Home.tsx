@@ -15,11 +15,7 @@ import SearchSuggestions from "../components/SearchSuggestions";
 import { setJsonLd, removeJsonLd } from "../helpers/jsonLd.ts";
 import useMeta from "../hooks/useMeta.ts";
 import Button from "../components/Button";
-import {
-  parseVersion,
-  compareParsedVersions,
-  sortVersionsDescending,
-} from "../helpers/sortVersions";
+import { sortVersionsDescending } from "../helpers/sortVersions";
 import {
   filterAddons,
   getActivePrefix,
@@ -27,32 +23,11 @@ import {
   type FilterOptions,
   type FilterState,
 } from "../helpers/filterAddons";
-
-export enum SortMode {
-  Stars,
-  Downloads,
-  Features,
-  Age,
-  LastUpdate,
-  McVersion,
-}
-
-export function sortModeToString(sortMode: SortMode): string {
-  switch (sortMode) {
-    case SortMode.Stars:
-      return "Stars";
-    case SortMode.Downloads:
-      return "Downloads";
-    case SortMode.Features:
-      return "Features";
-    case SortMode.Age:
-      return "Age";
-    case SortMode.LastUpdate:
-      return "Last Update";
-    case SortMode.McVersion:
-      return "Minecraft Version";
-  }
-}
+import {
+  SortMode,
+  sortModeToString,
+  sortAddons,
+} from "../helpers/sortAddons.ts";
 
 type HomeProps = RoutableProps & { owner?: string; name?: string };
 
@@ -351,100 +326,10 @@ const Home: FunctionalComponent<HomeProps> = (props) => {
     setTimeout(() => setShowSuggestions(false), 150);
   }
 
-  function sortAddons(mode: SortMode) {
-    switch (mode) {
-      case SortMode.Stars:
-        sortAddonsByStars();
-        break;
-      case SortMode.Downloads:
-        sortAddonsByDownloads();
-        break;
-      case SortMode.Features:
-        sortAddonsByFeatures();
-        break;
-      case SortMode.Age:
-        sortAddonsByAge();
-        break;
-      case SortMode.LastUpdate:
-        sortAddonsByLastUpdate();
-        break;
-      case SortMode.McVersion:
-        sortAddonsByMinecraftVersion();
-        break;
-    }
-  }
-
-  function sortAddonsByStars() {
-    if (sortMode == SortMode.Stars) return;
-    setSortMode(SortMode.Stars);
-    const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) => b.repo.stars - a.repo.stars,
-    );
-    setAddons(sortedAddons);
-  }
-
-  function sortAddonsByDownloads() {
-    if (sortMode == SortMode.Downloads) return;
-    setSortMode(SortMode.Downloads);
-    const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) => b.repo.downloads - a.repo.downloads,
-    );
-    setAddons(sortedAddons);
-  }
-
-  function sortAddonsByFeatures() {
-    if (sortMode == SortMode.Features) return;
-    setSortMode(SortMode.Features);
-    const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) =>
-        b.features.feature_count - a.features.feature_count,
-    );
-    setAddons(sortedAddons);
-  }
-
-  function sortAddonsByAge() {
-    if (sortMode == SortMode.Age) return;
-    setSortMode(SortMode.Age);
-    const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) =>
-        new Date(a.repo.creation_date).getTime() -
-        new Date(b.repo.creation_date).getTime(),
-    );
-    setAddons(sortedAddons);
-  }
-
-  function sortAddonsByLastUpdate() {
-    if (sortMode == SortMode.LastUpdate) return;
-    setSortMode(SortMode.LastUpdate);
-    const sortedAddons = [...addons].sort(
-      (a: Addon, b: Addon) =>
-        new Date(a.repo.last_update).getTime() -
-        new Date(b.repo.last_update).getTime(),
-    );
-    setAddons(sortedAddons);
-  }
-
-  function sortAddonsByMinecraftVersion() {
-    if (sortMode === SortMode.McVersion) return;
-    setSortMode(SortMode.McVersion);
-
-    const getVersions = (addon: Addon): string[] => {
-      const sv = addon.custom?.supported_versions;
-      if (sv && sv.length > 0) return sv;
-      return addon.mc_version ? [addon.mc_version] : [];
-    };
-
-    const getBestVersion = (addon: Addon): number[] => {
-      const parsed = getVersions(addon).map(parseVersion);
-      parsed.sort((a, b) => compareParsedVersions(b, a));
-      return parsed[0] ?? [];
-    };
-
-    const sorted = [...addons].sort((a, b) =>
-      compareParsedVersions(getBestVersion(b), getBestVersion(a)),
-    );
-
-    setAddons(sorted);
+  function handleSortChange(mode: SortMode) {
+    if (sortMode === mode) return;
+    setSortMode(mode);
+    setAddons(sortAddons(addons, mode));
   }
 
   function reverseAddonList() {
@@ -522,7 +407,7 @@ const Home: FunctionalComponent<HomeProps> = (props) => {
               SortMode.McVersion,
             ]}
             renderItem={(item) => sortModeToString(item)}
-            onSelect={(mode: SortMode) => sortAddons(mode)}
+            onSelect={handleSortChange}
             className="w-1/4 max-lg:w-1/2 max-md:w-full"
           />
           <button
