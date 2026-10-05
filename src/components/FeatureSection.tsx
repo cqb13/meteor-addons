@@ -1,9 +1,11 @@
 import type { Feature, Features } from "../helpers/addon";
-
-const HUD_PREFIX = "hud:";
-const MODULE_PREFIX = "module:";
-const COMMAND_PREFIX = "command:";
-const FEATURE_PREFIX = "feature:";
+import {
+  COMMAND_PREFIX,
+  FEATURE_PREFIX,
+  HUD_PREFIX,
+  MODULE_PREFIX,
+  parseSearchQuery,
+} from "../helpers/searchHelpers";
 
 export default function FeatureSection({
   features,
@@ -12,25 +14,13 @@ export default function FeatureSection({
 }: {
   features: Features;
   featureSearch: boolean;
-  searchValue: String;
+  searchValue: string;
 }) {
-  const searchValueLowered = searchValue.toLowerCase();
-  const forHud = searchValueLowered.startsWith(HUD_PREFIX);
-  const forModule = searchValueLowered.startsWith(MODULE_PREFIX);
-  const forCommand = searchValueLowered.startsWith(COMMAND_PREFIX);
-  const forFeature = searchValueLowered.startsWith(FEATURE_PREFIX);
-
-  let actualSearch = searchValue;
-
-  if (forHud) {
-    actualSearch = searchValue.slice(HUD_PREFIX.length);
-  } else if (forModule) {
-    actualSearch = searchValue.slice(MODULE_PREFIX.length);
-  } else if (forCommand) {
-    actualSearch = searchValue.slice(COMMAND_PREFIX.length);
-  } else if (forFeature) {
-    actualSearch = searchValue.slice(FEATURE_PREFIX.length);
-  }
+  const { prefix, query: actualSearch } = parseSearchQuery(searchValue);
+  const forHud = prefix === HUD_PREFIX;
+  const forModule = prefix === MODULE_PREFIX;
+  const forCommand = prefix === COMMAND_PREFIX;
+  const forFeature = prefix === FEATURE_PREFIX;
 
   return (
     <section className="w-full flex flex-col gap-2 mt-4">
@@ -115,7 +105,7 @@ function FeatureColumn({
   name: string;
   features: Feature[];
   featureSearch: boolean;
-  actualSearch: String;
+  actualSearch: string;
   forColumn: boolean;
 }) {
   return (
