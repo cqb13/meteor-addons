@@ -49,18 +49,19 @@ const Home: FunctionalComponent<HomeProps> = (props) => {
   const [notFound, setNotFound] = useState<boolean>(false);
 
   // filters
-  const initialSearch =
-    new URLSearchParams(window.location.search).get("q") ?? "";
-  const [searchValue, setSearchValue] = useState<string>(initialSearch);
+  const urlParams = new URLSearchParams(window.location.search);
+  const [searchValue, setSearchValue] = useState<string>(urlParams.get("q") ?? "");
   const [featureSearch, setFeatureSearch] = useState<boolean>(false);
-  const [verifiedOnly, setVerifiedOnly] = useState<boolean>(true);
-  const [includeArchived, setIncludeArchived] = useState<boolean>(false);
-  const [includeForks, setIncludeForks] = useState<boolean>(false);
-  const [onlyWithReleases, setOnlyWithReleases] = useState<boolean>(true);
-  const [selectedVersion, setSelectedVersion] = useState<string>("All");
+  const [verifiedOnly, setVerifiedOnly] = useState<boolean>(urlParams.get("verified") !== "0");
+  const [includeArchived, setIncludeArchived] = useState<boolean>(urlParams.get("archived") === "1");
+  const [includeForks, setIncludeForks] = useState<boolean>(urlParams.get("forks") === "1");
+  const [onlyWithReleases, setOnlyWithReleases] = useState<boolean>(urlParams.get("releases") !== "0");
+  const [selectedVersion, setSelectedVersion] = useState<string>(urlParams.get("version") ?? "All");
+  const [isReversed, setIsReversed] = useState<boolean>(urlParams.get("reverse") === "1");
 
-  // Sorting
-  const [sortMode, setSortMode] = useState<SortMode>(SortMode.Stars);
+  const initialSortParam = urlParams.get("sort");
+  const initialSortMode = initialSortParam !== null ? Number(initialSortParam) as SortMode : SortMode.Stars;
+  const [sortMode, setSortMode] = useState<SortMode>(initialSortMode);
 
   useEffect(() => {
     if (routeOwner && routeName) {
@@ -132,7 +133,6 @@ const Home: FunctionalComponent<HomeProps> = (props) => {
   useEffect(() => {
     (async () => {
       let addons = await loadAddons();
-      addons.sort((a: Addon, b: Addon) => b.repo.stars - a.repo.stars);
 
       let versions: string[] = [];
 
@@ -254,6 +254,22 @@ const Home: FunctionalComponent<HomeProps> = (props) => {
   }, [searchValue]);
 
   useEffect(() => {
+    const params = new URLSearchParams();
+    if (searchValue) params.set("q", searchValue);
+    if (verifiedOnly !== true) params.set("verified", "0");
+    if (includeArchived !== false) params.set("archived", "1");
+    if (includeForks !== false) params.set("forks", "1");
+    if (onlyWithReleases !== true) params.set("releases", "0");
+    if (selectedVersion !== "All") params.set("version", selectedVersion);
+    if (sortMode !== SortMode.Stars) params.set("sort", String(sortMode));
+    if (isReversed !== false) params.set("reverse", "1");
+
+    const query = params.toString();
+    const newUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+    history.replaceState(null, "", newUrl);
+  }, [searchValue, verifiedOnly, includeArchived, includeForks, onlyWithReleases, selectedVersion, sortMode, isReversed]);
+
+  useEffect(() => {
     const handleScroll = () => {
       if (showSuggestions) {
         setShowSuggestions(false);
@@ -266,8 +282,10 @@ const Home: FunctionalComponent<HomeProps> = (props) => {
   }, [showSuggestions]);
 
   const visibleAddons = useMemo(() => {
-    return filterAddons(addons, filterOptions);
-  }, [addons, filterOptions]);
+    const filtered = filterAddons(addons, filterOptions);
+    const sorted = sortAddons(filtered, sortMode);
+    return isReversed ? sorted.reverse() : sorted;
+  }, [addons, filterOptions, sortMode, isReversed]);
 
   function searchAddons(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -329,12 +347,10 @@ const Home: FunctionalComponent<HomeProps> = (props) => {
   function handleSortChange(mode: SortMode) {
     if (sortMode === mode) return;
     setSortMode(mode);
-    setAddons(sortAddons(addons, mode));
   }
 
   function reverseAddonList() {
-    const reversedAddons = [...addons].reverse();
-    setAddons(reversedAddons);
+    setIsReversed(!isReversed);
   }
 
   function closeAddonModal() {
